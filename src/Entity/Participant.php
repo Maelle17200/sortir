@@ -29,7 +29,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = ['ROLE_USER'];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
@@ -69,15 +69,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank(message: "Veuillez renseigner un numéro de téléphone.")]
     #[Assert\Regex(
-        pattern: '/^\d{10}$/',
+        pattern: "^\d{10}$",
         message: "Le numéro doit contenir 10 chiffres, sans tiret ni caractère spécial.",
     )]
     #[ORM\Column]
     private ?string $telephone = null;
-
-    #[ORM\ManyToOne(inversedBy: 'participants')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Campus $campus = null;
 
     public function getId(): ?int
     {
@@ -184,31 +180,4 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-    public function setPseudo(string $pseudo): static
-    {
-        $this->pseudo = $pseudo;
-
-        return $this;
-    }
-
-
-    public function getPseudo(): ?string
-    {
-        return $this->pseudo;
-    }
-
-    /**
-     * @param Campus|null $campus
-     */
-    public function setCampus(?Campus $campus): void
-    {
-        $this->campus = $campus;
-    }
-
-    public function getCampus(): ?Campus
-    {
-        return $this->campus;
-    }
-
 }

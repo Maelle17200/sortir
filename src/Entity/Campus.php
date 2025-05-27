@@ -35,6 +35,8 @@ class Campus
     #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'campus')]
     private Collection $participants;
 
+
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
@@ -117,4 +119,5 @@ class Campus
 
         return $this;
     }
+
 }
