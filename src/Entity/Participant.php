@@ -75,6 +75,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $telephone = null;
 
+    #[ORM\ManyToOne(targetEntity: Campus::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -180,4 +185,28 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    public function setPseudo(string $string): static
+    {
+        $this->pseudo = $string;
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
 }
