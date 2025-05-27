@@ -6,6 +6,7 @@ use App\Repository\EtatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtatRepository::class)]
 class Etat
@@ -15,6 +16,8 @@ class Etat
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: "Veuillez renseigner le nom du campus")]
+    #[Assert\Length(max: 180, maxMessage: "Le nom est trop long. 180 caractères maximum.")]
     #[ORM\Column(length: 180)]
     private ?string $libelle = null;
 
@@ -54,7 +57,7 @@ class Etat
         return $this->sorties;
     }
 
-    public function addSorty(Sortie $sorty): static
+    public function addSortie(Sortie $sorty): static
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties->add($sorty);
@@ -64,7 +67,7 @@ class Etat
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): static
+    public function removeSortie(Sortie $sorty): static
     {
         if ($this->sorties->removeElement($sorty)) {
             // set the owning side to null (unless already changed)
