@@ -3,59 +3,93 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-class Participant
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email', 'pseudo'])]
+#[UniqueEntity(fields: ['email'], message: 'Cet email existe déjà.')]
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Email(message: "Veuillez renseigner un email valide.")]
+    #[Assert\NotBlank(message: "Veuillez renseigner un email.")]
+    #[Assert\Length(max: 180, maxMessage: "Cet email est trop long, 180 caractères max.")]
     #[ORM\Column(length: 180)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 180)]
-    private ?string $prenom = null;
-
-    #[ORM\Column(length: 10)]
-    private ?string $telephone = null;
-
-    #[ORM\Column(length: 180)]
-    private ?string $mail = null;
-
-    #[ORM\Column(length: 180)]
-    private ?string $motPasse = null;
-
-    #[ORM\Column]
-    private ?bool $administrateur = null;
-
-    #[ORM\Column]
-    private ?bool $actif = null;
-
-    #[ORM\ManyToOne(inversedBy: 'participants')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Campus $campus = null;
+    private ?string $email = null;
 
     /**
-     * @var Collection<int, Sortie>
+     * @var list<string> The user roles
      */
-    #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participants')]
-    private Collection $sorties;
+    #[ORM\Column]
+    private array $roles = [];
 
-    public function __construct()
-    {
-        $this->sorties = new ArrayCollection();
-    }
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $motPasse = null;
 
+    #[Assert\NotBlank(message: "Veuillez renseigner un pseudo.")]
+    #[Assert\Length(
+        min: 2,
+        max: 180,
+        minMessage: "Ce pseudo est trop court, 2 caractères min.",
+        maxMessage: "Ce pseudo est trop long, 180 caractères max.",
+    )]
+    #[ORM\Column]
+    private ?string $pseudo = null;
+
+    #[Assert\NotBlank(message: "Veuillez renseigner un nom.")]
+    #[Assert\Length(
+        min: 2,
+        max: 180,
+        minMessage: "Ce nom est trop court, 2 caractères min.",
+        maxMessage: "Ce nom est trop long, 180 caractères max.",
+    )]
+    #[ORM\Column()]
+    private ?string $nom = null;
+
+    #[Assert\NotBlank(message: "Veuillez renseigner un prénom.")]
+    #[Assert\Length(
+        min: 2,
+        max: 180,
+        minMessage: "Ce prénom est trop court, 2 caractères min.",
+        maxMessage: "Ce prénom est trop long, 180 caractères max.",
+    )]
+    #[ORM\Column]
+    private ?string $prenom = null;
+
+    #[Assert\NotBlank(message: "Veuillez renseigner un numéro de téléphone.")]
+    #[Assert\Regex(
+        pattern: "^\d{10}$",
+        message: "Le numéro doit contenir 10 chiffres, sans tiret ni caractère spécial.",
+    )]
+    #[ORM\Column]
+    private ?string $telephone = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
     }
 
     public function getNom(): ?string
@@ -87,96 +121,63 @@ class Participant
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone): static
+    public function setTelephone(string $tel): static
     {
-        $this->telephone = $telephone;
+        $this->telephone = $tel;
 
         return $this;
     }
 
-    public function getMail(): ?string
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->mail;
+        return $this->email . ' - ' . $this->pseudo;
     }
 
-    public function setMail(string $mail): static
-    {
-        $this->mail = $mail;
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array    {
 
-        return $this;
+        return array_unique($this->roles);
     }
 
-    public function getMotPasse(): ?string
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
     {
-        return $this->motPasse;
-    }
-
-    public function setMotPasse(string $motPasse): static
-    {
-        $this->motPasse = $motPasse;
-
-        return $this;
-    }
-
-    public function isAdministrateur(): ?bool
-    {
-        return $this->administrateur;
-    }
-
-    public function setAdministrateur(bool $administrateur): static
-    {
-        $this->administrateur = $administrateur;
-
-        return $this;
-    }
-
-    public function isActif(): ?bool
-    {
-        return $this->actif;
-    }
-
-    public function setActif(bool $actif): static
-    {
-        $this->actif = $actif;
-
-        return $this;
-    }
-
-    public function getCampus(): ?Campus
-    {
-        return $this->campus;
-    }
-
-    public function setCampus(?Campus $campus): static
-    {
-        $this->campus = $campus;
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Sortie>
+     * @see PasswordAuthenticatedUserInterface
      */
-    public function getSorties(): Collection
+    public function getPassword(): ?string
     {
-        return $this->sorties;
+        return $this->motPasse;
     }
 
-    public function addSortie(Sortie $sortie): static
+    public function setPassword(string $password): static
     {
-        if (!$this->sorties->contains($sortie)) {
-            $this->sorties->add($sortie);
-        }
+        $this->motPasse = $password;
 
         return $this;
     }
 
-    public function removeSortie(Sortie $sortie): static
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
     {
-        $this->sorties->removeElement($sortie);
-
-        return $this;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
-
-
 }

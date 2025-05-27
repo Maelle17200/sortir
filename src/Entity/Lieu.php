@@ -6,7 +6,10 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[UniqueEntity(fields: ['rue', 'ville'], message: 'Ce lieu existe déjà.')]
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
 class Lieu
 {
@@ -15,9 +18,23 @@ class Lieu
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: "Veuillez renseigner un nom.")]
+    #[Assert\Length(
+        min: 2,
+        max: 180,
+        minMessage: "Ce nom est trop court, 2 caractères min.",
+        maxMessage: "Ce nom est trop long, 180 caractères max.",
+    )]
     #[ORM\Column(length: 180)]
     private ?string $nom = null;
 
+    #[Assert\NotBlank(message: "Veuillez renseigner une rue.")]
+    #[Assert\Length(
+        min: 2,
+        max: 180,
+        minMessage: "Ce nom est trop court, 2 caractères min.",
+        maxMessage: "Ce nom est trop long, 180 caractères max.",
+    )]
     #[ORM\Column(length: 180)]
     private ?string $rue = null;
 
@@ -41,7 +58,6 @@ class Lieu
     {
         $this->sorties = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
