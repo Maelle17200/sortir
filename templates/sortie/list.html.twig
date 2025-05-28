@@ -3,7 +3,11 @@
 {% block title %}{{ parent() }} | Liste des sorties{% endblock %}
 
 {% block body %}
-    <h1>Liste des sorties</h1>
+    <h1>Filtrer les sorties</h1>
+    {{ form_start(triSortiesForm) }}
+    {{ form_widget(triSortiesForm) }}
+    <button>Rechercher</button>
+    {{ form_end(triSortiesForm) }}
 
     <table class="table">
         <thead>
