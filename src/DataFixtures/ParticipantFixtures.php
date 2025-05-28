@@ -21,6 +21,7 @@ class ParticipantFixtures extends Fixture
 
         //Crée un admin
         $admin = new Participant();
+
         $admin->setNom('Admin');
         $admin->setPrenom('Admin');
         $admin->setPseudo('Admin');
@@ -29,6 +30,7 @@ class ParticipantFixtures extends Fixture
         $admin->setPassword($this->passwordHasher->hashPassword($admin, '123456'));
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
+
         $manager->persist($admin);
 
         //Crée 20 users actifs

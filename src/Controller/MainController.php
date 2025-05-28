@@ -15,11 +15,10 @@ class MainController extends AbstractController
         return $this->render('main/accueil.html.twig');
     }
 
-    #[Route('/test', name: 'main_test', methods: ['GET'])]
-    public function test():Response
+    #[Route('/login', name: 'main_login', methods: ['GET'])]
+    public function login():Response
     {
-        return $this->render('main/test.html.twig');
+        return $this->render('security/login.html.twig');
     }
-
 
 }
