@@ -30,7 +30,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
             $dateRegister = $faker->dateTimeBetween('now' ,\DateTime::createFromImmutable($sortie->getDateHeureDebut()));
             $sortie->setDateLimiteInscription(\DateTimeImmutable::createFromMutable($dateRegister));
-            $sortie->setNbInscriptionMax($faker->optional(20)->numberBetween(1,50));
+            $sortie->setNbInscriptionMax($faker->numberBetween(1,50));
             $sortie->setInfosSortie($faker->paragraph(5));
             //4 campus
             $sortie->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
