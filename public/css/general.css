@@ -1,0 +1,15 @@
+body {
+    background-color: rgb(68, 84, 132);
+}
+
+p{
+    color: rgb(21, 26, 25);
+}
+
+h1{
+    color: rgb(21, 26, 25)
+}
+
+.flex{
+    display: flex;
+}
