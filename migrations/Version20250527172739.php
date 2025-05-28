@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250527205930 extends AbstractMigration
+final class Version20250527172739 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,15 +28,6 @@ final class Version20250527205930 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE sortie_participant ADD CONSTRAINT FK_E6D4CDAD9D1C3019 FOREIGN KEY (participant_id) REFERENCES participant (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE participant DROP FOREIGN KEY FK_D79F6B11AF5D55E1
-        SQL);
-        $this->addSql(<<<'SQL'
-            DROP INDEX IDX_D79F6B11AF5D55E1 ON participant
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE participant DROP campus_id
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE sortie ADD organisateur_id INT NOT NULL
@@ -60,15 +51,6 @@ final class Version20250527205930 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             DROP TABLE sortie_participant
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE participant ADD campus_id INT NOT NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE participant ADD CONSTRAINT FK_D79F6B11AF5D55E1 FOREIGN KEY (campus_id) REFERENCES campus (id) ON UPDATE NO ACTION ON DELETE NO ACTION
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE INDEX IDX_D79F6B11AF5D55E1 ON participant (campus_id)
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE sortie DROP FOREIGN KEY FK_3C3FD3F2D936B2FA

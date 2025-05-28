@@ -7,50 +7,32 @@ use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Symfony\Bridge\Twig\Extension\twig_is_selected_choice;
 
 class TriSortiesForm extends AbstractType
 {
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('dateHeureDebut', null, [
-                'widget' => 'single_text',
+            ->add('nom', SearchType::class, [
+                'label' => 'Le nom de la sortie contient :',
             ])
-            ->add('duree', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('dateLimiteInscription', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('nbInscriptionMax')
-            ->add('infosSortie')
-            ->add('etat', EntityType::class, [
-                'class' => Etat::class,
-                'choice_label' => 'id',
-            ])
-            ->add('lieu', EntityType::class, [
-                'class' => Lieu::class,
-                'choice_label' => 'id',
-            ])
-            ->add('campus', EntityType::class, [
-                'class' => Campus::class,
-                'choice_label' => 'id',
-            ])
-            ->add('participants', EntityType::class, [
-                'class' => Participant::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
-            ->add('organisateur', EntityType::class, [
-                'class' => Participant::class,
-                'choice_label' => 'id',
-            ])
-        ;
+            ->add('campus', ChoiceType::class, [
+                'label' => 'Campus :',
+                'choices' => []
+            ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
