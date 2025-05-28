@@ -21,4 +21,12 @@ class MainController extends AbstractController
         return $this->render('security/login.html.twig');
     }
 
+    #[Route('/modifierProfil', name: 'main_modifierProfil', methods: ['GET'])]
+    public function modifierProfil():Response
+    {
+        return $this->render('main/modifierProfil.html.twig');
+    }
+
+
+
 }
