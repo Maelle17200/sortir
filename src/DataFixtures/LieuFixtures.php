@@ -18,11 +18,8 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
             $lieu = new Lieu();
             $lieu->setNom($faker->word());
             $lieu->setRue($faker->streetName());
-            $lieu->setLatitude($faker->optional(60)->latitude());
-
-            if($lieu->getLatitude()){
-                $lieu->setLongitude($faker->longitude());
-            }
+            $lieu->setLatitude($faker->latitude());
+            $lieu->setLongitude($faker->longitude());
 
             $lieu->setVille($this->getReference('ville'.$faker->numberBetween(1, 10), Ville::class));
             $manager->persist($lieu);
@@ -30,7 +27,6 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
             if(!$this->hasReference('lieu'.$i, Lieu::class)){
                 $this->addReference('lieu'.$i, $lieu);
             }
-
 
         }
 

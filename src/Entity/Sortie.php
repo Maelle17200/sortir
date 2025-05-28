@@ -42,7 +42,7 @@ class Sortie
     #[ORM\Column]
     private ?\DateTimeImmutable $dateLimiteInscription = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?int $nbInscriptionMax = null;
 
     #[Assert\NotBlank(message: "Veuillez donner quelques informations sur la sortie")]
