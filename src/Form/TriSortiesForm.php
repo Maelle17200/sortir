@@ -27,7 +27,6 @@ class TriSortiesForm extends AbstractType
     {
 
         // Récupère l'utilisateur connecté
-
         $user = $this->security->getToken()->getUser();
         $campusUtilisateurId = $user->getCampus()->getId();
         dump($campusUtilisateurId);
@@ -38,47 +37,47 @@ class TriSortiesForm extends AbstractType
         $builder
             ->add('nom', SearchType::class, [
                 'label' => 'Le nom de la sortie contient',
+                'mapped' => false, //Champs non relié à l'entité
+                'required' => false,
             ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
-                'choice_label' => 'nom', // ou autre champ affichable
+                'choice_label' => 'nom', //affichera le nom du campus pour les choix
                 'data' => $campusUtilisateur,
                 'required' => true,
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
                 'widget' => 'single_text', // pour afficher le champ sous un seul input
-                'required' => true,
+                'required' => false,
                 'label' => 'Entre',
                 'mapped' => false, //Champs non relié à l'entité
             ])
             ->add('dateHeureFin', DateTimeType::class, [
                 'widget' => 'single_text', // pour afficher le champ sous un seul input
-                'required' => true,
+                'required' => false,
                 'label' => 'Et',
                 'mapped' => false, //Champs non relié à l'entité
             ])
             ->add('organisateur', CheckboxType::class, [
                 'label'    => "Sorties dont je suis l'organisateur/trice",
-                'required' => false, // Cette case doit être cochée pour soumettre le formulaire
+                'required' => false,
                 'mapped'   => false, // Ce champ n'est pas lié à un champ d'entité
             ])
             ->add('inscrit', CheckboxType::class, [
                 'label'    => "Sorties où je suis inscrit/e",
-                'required' => false, // Cette case doit être cochée pour soumettre le formulaire
+                'required' => false,
                 'mapped'   => false, // Ce champ n'est pas lié à un champ d'entité
             ])
             ->add('pasInscrit', CheckboxType::class, [
                 'label'    => "Sorties où je ne suis pas inscrit/e",
-                'required' => false, // Cette case doit être cochée pour soumettre le formulaire
+                'required' => false,
                 'mapped'   => false, // Ce champ n'est pas lié à un champ d'entité
             ])
             ->add('sortieTerminee', CheckboxType::class, [
                 'label'    => "Sorties terminées",
-                'required' => false, // Cette case doit être cochée pour soumettre le formulaire
+                'required' => false,
                 'mapped'   => false, // Ce champ n'est pas lié à un champ d'entité
             ]);
-
-
 
     }
 

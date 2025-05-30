@@ -71,7 +71,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank(message: "Veuillez renseigner un numéro de téléphone.")]
     #[Assert\Regex(
-        pattern: "^\d{10}$",
+        pattern: "^\d{10}$^",
         message: "Le numéro doit contenir 10 chiffres, sans tiret ni caractère spécial.",
     )]
     #[ORM\Column]

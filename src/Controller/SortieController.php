@@ -21,12 +21,11 @@ final class SortieController extends AbstractController
         $listeSorties = $sr->findAll();
 
         $form = $this->createForm(TriSortiesForm::class, $sortie);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $form->handleRequest($request);//récupère les données du formulaire
 
+        if ($form->isSubmitted()) {
 
-
-
+            //TODO tri
         }
 
         return $this->render('sortie/list.html.twig', [
