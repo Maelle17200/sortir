@@ -19,6 +19,19 @@
         {% include("_navbar.html.twig") %}
     </header>
     <main class="flex-grow-1">
+        {% if app.user %}
+            <div class="flex flex-column">
+                <span class="align-self-end">Utilisateur connecté : {{ app.user.prenom }} {{ app.user.nom|slice(0, 1) }}.</span>
+
+                {% for role in app.user.roles %}
+                    {% set roleName = role|split('ROLE_')|last %}
+                    {% set formattedRoleName = roleName|capitalize %}
+                    <span class="align-self-end">Rôle : {{ formattedRoleName }}</span>
+                    <span class="align-self-end">Campus : {{ app.user.campus.nom }}</span>
+                    <span class="align-self-end">Date du jour {{ 'now'|date('d / m / Y') }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% block body %}{% endblock %}
     </main>
     <footer class="text-center my-2">
