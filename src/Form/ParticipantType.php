@@ -21,16 +21,22 @@ class ParticipantType extends AbstractType
                 'disabled' => true,
                 'label' => 'Campus',
             ])
+            ->add('pseudo')
             ->add('prenom')
             ->add('nom')
-            ->add('pseudo')
-            ->add('email')
             ->add('telephone')
+            ->add('email')
             ->add('password', PasswordType::class, [
                 'required' => true, // Le mot de passe n'est pas requis lors de la modif
                 'mapped' => true,
-            ]);
-    }
+                'label' => 'mot de passe',
+            ])
+            ->add('password1', PasswordType::class, [
+                'required' => true,
+                'mapped' => false,
+                'label' => 'Confirmation',
+            ])
+        ;}
 
     public function configureOptions(OptionsResolver $resolver): void
     {
