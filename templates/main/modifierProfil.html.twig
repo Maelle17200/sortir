@@ -1,55 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Modifier mon profil{% endblock %}
 
 {% block body %}
-<h1>Mon profil</h1>
-    <form class="col g-3">
-        <div class="col-md-4">
-            <label for="inputState" class="form-label">Campus</label>
-            <select id="inputState" class="form-select">
-                <option selected>Choose...</option>
-                <option>...</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="inputTelephone" class="form-label">Pseudo</label>
-            <input type="text" class="form-control" id="inputTelephone">
-        </div>
-        <div class="col-md-4">
-            <label for="inputTelephone" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="inputTelephone">
-        </div>
-        <div class="col-md-4">
-            <label for="inputTelephone" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="inputTelephone">
-        </div>
-        <div class="col-md-4">
-            <label for="inputTelephone" class="form-label">Téléphone</label>
-            <input type="text" class="form-control" id="inputTelephone">
-        </div>
-        <div class="col-md-4">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-md-4">
-            <label for="inputPassword4" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="inputPassword4" placeholder="Ecrivez votre mot de passe">
-        </div>
-        <div class="col-md-4">
-            <label for="inputConfirmation" class="form-label">Confirmation</label>
-            <input type="text" class="form-control" id="inputConfirmation" placeholder="Confirmer votre mot de passe">
-        </div>
+    <h1>Modifier mon profil</h1>
 
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </div>
-    </form>
-
-
-{% endblock %}
-
-
-
-{% block title %}
-    {{ parent() }} | Mon profil
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
 {% endblock %}
