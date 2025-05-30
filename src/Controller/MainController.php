@@ -10,7 +10,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MainController extends AbstractController
 {
-    #[Route('/', name: 'main_accueil', methods: ['GET'])]
+    #[Route('/', name: 'app_main_login_login', methods: ['GET'])]
+    public function login():Response
+    {
+        return $this->render('security/login.html.twig');
+    }
+
+    #[Route('/accueil', name: 'main_accueil', methods: ['GET'])]
     public function accueil():Response
     {
         return $this->render('main/accueil.html.twig');
