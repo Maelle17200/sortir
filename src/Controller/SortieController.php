@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
+use App\DTO\RechercheSortiesDTO;
 use App\Entity\Sortie;
-use App\Form\TriSortiesForm;
+use App\Form\RechercheSortiesForm;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,10 +18,10 @@ final class SortieController extends AbstractController
     #[Route('/sortie', name: 'sortie_liste', methods: ['GET', 'POST'])]
     public function liste(SortieRepository $sr, Request $request,): Response
     {
-        $sortie = new Sortie();
+        $rechercheSortie = new RechercheSortiesDTO();
         $listeSorties = $sr->findAll();
 
-        $form = $this->createForm(TriSortiesForm::class, $sortie);
+        $form = $this->createForm(RechercheSortiesForm::class, $rechercheSortie);
         $form->handleRequest($request);//récupère les données du formulaire
 
         if ($form->isSubmitted()) {
@@ -32,7 +33,7 @@ final class SortieController extends AbstractController
             //passe la liste des sorties à twig pour affichage
             'sorties' => $listeSorties,
             //Passe le formulaire à twig pour affichage
-            'triSortiesForm' => $form->createView(),
+            'rechercheSortiesForm' => $form->createView(),
         ]);
     }
 }
