@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\DTO\RechercheSortiesDTO;
 use App\Entity\Campus;
-use App\Entity\Etat;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -35,45 +34,43 @@ class RechercheSortiesForm extends AbstractType
 
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'nom',
+                'label' => "L'intitulé de la sortie contient",
                 'required' => false,
             ])
-            ->add('dateHeureDebut', DateTimeType::class, [
-                'label' => 'Date de début',
+            ->add('dateHeureDebutRecherche', DateTimeType::class, [
+                'label' => 'Entre le',
                 'widget' => 'single_text',
                 'required' => false,
+                'empty_data' => '1971-01-01 00:00:00', // si champ non rempli, renvoi le 1e janvier 1900
             ])
-            ->add('dateHeureFin', DateTimeType::class, [
-                'label' => 'Date de Fin',
+            ->add('dateHeureFinRecherche', DateTimeType::class, [
+                'label' => 'Et le',
                 'widget' => 'single_text',
                 'required' => false,
+                'empty_data' => '2038-01-01 00:00:00',
             ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'nom',
-                'label' => 'Campus',
-                'required' => false,
+                'label' => 'Sortie rattachée au campus de',
+                'required' => true,
                 'data' => $campus,
             ])
             ->add('userOrganisateur', CheckboxType::class, [
                 'label' => "Sorties dont je suis l'organisateur/trice",
                 'required' => false,
-                'mapped' => false,
             ])
             ->add('userInscrit', CheckboxType::class, [
                 'label' => "Sorties auxquelles je suis inscrit/e",
                 'required' => false,
-                'mapped' => false,
             ])
             ->add('userPasInscrit', CheckboxType::class, [
                 'label' => "Sorties dont je ne suis pas inscrit/e",
                 'required' => false,
-                'mapped' => false,
             ])
-            ->add('sortieTerminee', CheckboxType::class, [
+            ->add('sortiesTerminees', CheckboxType::class, [
                 'label' => "Sorties terminées",
                 'required' => false,
-                'mapped' => false,
             ]);
     }
 

@@ -4,71 +4,48 @@ namespace App\DTO;
 
 use App\Entity\Campus;
 use App\Entity\Etat;
-use App\Entity\Participant;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 class RechercheSortiesDTO
 {
     private ?string $nom = null;
-    private ?\DateTimeImmutable $dateHeureDebut = null;
-    private ?\DateTimeImmutable $dateHeureFin = null;
+    private ?\DateTimeImmutable $dateHeureDebutRecherche = null;
+    private ?\DateTimeImmutable $dateHeureFinRecherche = null;
     private ?Campus $campus = null;
     private ?Etat $etat = null;
-    private Collection $participants;
-    private ?Participant $organisateur = null;
-
-    public function __construct()
-    {
-        $this->participants = new ArrayCollection();
-    }
+    private Bool $userOrganisateur = false;
+    private Bool $userInscrit = false;
+    private Bool $userPasInscrit = false;
+    private Bool $sortiesTerminees = false;
 
     public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): void
     {
         $this->nom = $nom;
-
-        return $this;
     }
 
-    public function getDateHeureDebut(): ?\DateTimeImmutable
+    public function getDateHeureDebutRecherche(): ?\DateTimeImmutable
     {
-        return $this->dateHeureDebut;
+        return $this->dateHeureDebutRecherche;
     }
 
-    public function setDateHeureDebut(\DateTimeImmutable $dateHeureDebut): static
+    public function setDateHeureDebutRecherche(?\DateTimeImmutable $dateHeureDebutRecherche): void
     {
-        $this->dateHeureDebut = $dateHeureDebut;
-
-        return $this;
+        $this->dateHeureDebutRecherche = $dateHeureDebutRecherche;
     }
 
-    public function getDateHeureFin(): ?\DateTimeImmutable
+    public function getDateHeureFinRecherche(): ?\DateTimeImmutable
     {
-        return $this->dateHeureFin;
+        return $this->dateHeureFinRecherche;
     }
 
-    public function setDateHeureFin(\DateTimeImmutable $dateHeureFin): static
+    public function setDateHeureFinRecherche(?\DateTimeImmutable $dateHeureFinRecherche): void
     {
-        $this->dateHeureFin = $dateHeureFin;
-
-        return $this;
-    }
-
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(?Etat $etat): static
-    {
-        $this->etat = $etat;
-
-        return $this;
+        $this->dateHeureFinRecherche = $dateHeureFinRecherche;
     }
 
     public function getCampus(): ?Campus
@@ -76,47 +53,69 @@ class RechercheSortiesDTO
         return $this->campus;
     }
 
-    public function setCampus(?Campus $campus): static
+    public function setCampus(?Campus $campus): void
     {
         $this->campus = $campus;
-
-        return $this;
     }
 
-    /**
-     * @return Collection<int, Participant>
-     */
-    public function getParticipants(): Collection
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?Etat $etat): void
+    {
+        $this->etat = $etat;
+    }
+
+    public function isUserOrganisateur(): bool
+    {
+        return $this->userOrganisateur;
+    }
+
+    public function setUserOrganisateur(bool $userOrganisateur): void
+    {
+        $this->userOrganisateur = $userOrganisateur;
+    }
+
+    public function isUserInscrit(): bool
+    {
+        return $this->userInscrit;
+    }
+
+    public function setUserInscrit(bool $userInscrit): void
+    {
+        $this->userInscrit = $userInscrit;
+    }
+
+    public function isUserPasInscrit(): bool
+    {
+        return $this->userPasInscrit;
+    }
+
+    public function setUserPasInscrit(bool $userPasInscrit): void
+    {
+        $this->userPasInscrit = $userPasInscrit;
+    }
+
+    public function isSortiesTerminees(): bool
+    {
+        return $this->sortiesTerminees;
+    }
+
+    public function setSortiesTerminees(bool $sortiesTerminees): void
+    {
+        $this->sortiesTerminees = $sortiesTerminees;
+    }
+
+    public function getParticipants(): ArrayCollection
     {
         return $this->participants;
     }
 
-    public function addParticipant(Participant $participant): static
+    public function setParticipants(ArrayCollection $participants): void
     {
-        if (!$this->participants->contains($participant)) {
-            $this->participants->add($participant);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(Participant $participant): static
-    {
-        $this->participants->removeElement($participant);
-
-        return $this;
-    }
-
-    public function getOrganisateur(): ?Participant
-    {
-        return $this->organisateur;
-    }
-
-    public function setOrganisateur(?Participant $organisateur): static
-    {
-        $this->organisateur = $organisateur;
-
-        return $this;
+        $this->participants = $participants;
     }
 
 }
