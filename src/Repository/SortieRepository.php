@@ -61,13 +61,13 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         //TODO problème inscrit/pas inscrit => requetes ok séparément, mais pas ensemble
-        if($userInscrit){
+        if($userInscrit && !$userPasInscrit){
             $queryBuilder
                 ->andWhere(':user MEMBER OF sortie.participants')
                 ->setParameter('user', $user->getId());
         }
 
-        if($userPasInscrit){
+        if($userPasInscrit && !$userInscrit){
             $queryBuilder
                 ->andWhere(':user NOT MEMBER OF sortie.participants')
                 ->setParameter('user', $user->getId());
