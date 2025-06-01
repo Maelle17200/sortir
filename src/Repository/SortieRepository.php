@@ -25,6 +25,7 @@ class SortieRepository extends ServiceEntityRepository
         ?\DateTimeImmutable $dateDebutRecherche,
         ?\DateTimeImmutable $dateFinRecherche,
         ?campus $campus,
+        bool $tousCampus,
         ?UserInterface $user,
         bool $userOrganisateur,
         bool $userInscrit,
@@ -40,7 +41,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter(':nom','%'.$nom.'%');
         }
 
-        if($campus){
+        if($campus && !$tousCampus){
             $queryBuilder
                 ->andWhere('sortie.campus = :campus')
                 ->setParameter('campus',$campus);
@@ -60,14 +61,13 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user->getId());
         }
 
-        //TODO problème inscrit/pas inscrit => requetes ok séparément, mais pas ensemble
-        if($userInscrit){
+        if($userInscrit && !$userPasInscrit){
             $queryBuilder
                 ->andWhere(':user MEMBER OF sortie.participants')
                 ->setParameter('user', $user->getId());
         }
 
-        if($userPasInscrit){
+        if($userPasInscrit && !$userInscrit){
             $queryBuilder
                 ->andWhere(':user NOT MEMBER OF sortie.participants')
                 ->setParameter('user', $user->getId());

@@ -12,9 +12,20 @@ class RechercheSortiesDTO
     private ?\DateTimeImmutable $dateHeureDebutRecherche = null;
     private ?\DateTimeImmutable $dateHeureFinRecherche = null;
     private ?Campus $campus = null;
+    private bool $tousCampus;
     private ?Etat $etat = null;
     private Bool $userOrganisateur = false;
     private Bool $userInscrit = false;
+
+    public function isTousCampus(): bool
+    {
+        return $this->tousCampus;
+    }
+
+    public function setTousCampus(bool $tousCampus): void
+    {
+        $this->tousCampus = $tousCampus;
+    }
     private Bool $userPasInscrit = false;
     private Bool $sortiesTerminees = false;
 

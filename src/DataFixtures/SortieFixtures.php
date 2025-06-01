@@ -39,7 +39,10 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
             //10 lieux différents (cf LieuFixtures)
             $sortie->setLieu($this->getReference('lieu'.$faker->numberBetween(1,10), Lieu::class));
             //20 participants actifs différents (cf ParticipantFixtures)
-            $sortie->setOrganisateur($this->getReference('participant'.$faker->numberBetween(1,20), Participant::class));
+
+            $organisateurId = $faker->numberBetween(1,20);
+            $sortie->setOrganisateur($this->getReference('participant'.$organisateurId, Participant::class));
+
             //Tire au sort le nombre de participants à la sortie, puis cré le tableau des participants
             $nbParticipants = $faker->numberBetween(1, $sortie->getNbInscriptionMax());
             for ($j = 0; $j < $nbParticipants; $j++) {

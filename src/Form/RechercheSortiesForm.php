@@ -56,6 +56,10 @@ class RechercheSortiesForm extends AbstractType
                 'required' => true,
                 'data' => $campus,
             ])
+            ->add('tousCampus', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Tous les campus',
+            ])
             ->add('userOrganisateur', CheckboxType::class, [
                 'label' => "Sorties dont je suis l'organisateur/trice",
                 'required' => false,

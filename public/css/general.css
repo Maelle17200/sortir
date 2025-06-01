@@ -11,10 +11,6 @@ h1{
     text-align: center;
 }
 
-.flex{
-    display: flex;
-}
-
 form {
     max-width: 400px;
     margin: 60px auto;
@@ -52,4 +48,19 @@ form button[type="submit"] {
     margin-top: 20px;
     width: 100%;
     border-radius: 8px;
+}
+
+.flex{
+    display: flex;
+}
+
+/*div check formulaire tri */
+.form-check{
+    display: flex;
+    align-items: center;
+}
+
+/*labels check formulaire tri*/
+.form-check-label{
+    margin-left: 15px;
 }
