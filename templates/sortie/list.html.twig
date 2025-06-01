@@ -23,7 +23,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tboby>
+        <tbody>
             {% for sortie in sorties %}
                 <tr>
                     <td>{{ sortie.nom }}</td>
@@ -40,10 +40,12 @@
                         {% endfor %}
                     </td>
                     <td>{{ sortie.organisateur.pseudo }}</td>
-                    <td>Actions</td>
+                    <td>
+                        <a href="{{ path('sortie_detail', {id: sortie.id}) }}">Détail</a>
+                    </td>
                 </tr>
             {% endfor %}
-        </tboby>
+        </tbody>
     </table>
 
 {% endblock %}

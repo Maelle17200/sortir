@@ -19,7 +19,7 @@ final class SortieController extends AbstractController
 {
     //Affiche et traite le formulaire de tri et la liste des sorties
     #[Route('/sortie', name: 'sortie_liste', methods: ['GET', 'POST'])]
-    public function liste(SortieRepository $sr, Request $request, EntityManagerInterface $em): Response
+    public function liste(SortieRepository $sr, Request $request): Response
     {
         $rechercheSortie = new RechercheSortiesDTO();
         $listeSorties = [];
@@ -27,8 +27,11 @@ final class SortieController extends AbstractController
         $form = $this->createForm(RechercheSortiesForm::class, $rechercheSortie);
         $form->handleRequest($request);//récupère les données du formulaire
 
+        //Traitement du formulaire s'il est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
+
             $formData = $form->getData();
+
             $nom = $formData->getNom();
             $dateDebutRecherche = $formData->getDateHeureDebutRecherche();
             $dateFinRecherche = $formData->getDateHeureFinRecherche();
@@ -40,8 +43,10 @@ final class SortieController extends AbstractController
             $userPasInscrit = $formData->isUserPasInscrit();
             $sortiesTerminees = $formData->isSortiesTerminees();
 
+            //Appel de la base avec ces données
             $listeSorties = $sr->getByRecherche($nom, $dateDebutRecherche, $dateFinRecherche, $campus, $tousCampus, $user, $userOrganisateur, $userInscrit, $userPasInscrit, $sortiesTerminees);
 
+            //Passe à Twig les sorties filtrées, réaffiche le formulaire
             return $this->render('sortie/list.html.twig', [
                 //passe la liste des sorties à twig pour affichage
                 'sorties' => $listeSorties,
@@ -51,6 +56,7 @@ final class SortieController extends AbstractController
 
         }
 
+        //Si le formulaire n'est pas soumis : affichage de toutes les sorties et du formulaire de recherche
         $listeSorties = $sr->findAll();
 
         return $this->render('sortie/list.html.twig', [
@@ -58,6 +64,23 @@ final class SortieController extends AbstractController
             'sorties' => $listeSorties,
             //Passe le formulaire à twig pour affichage
             'rechercheSortiesForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/sortie/{id}', name: 'sortie_detail', requirements: ['id'=>'\d+'], methods: ['GET'])]
+    public function detail(SortieRepository $sr, $id): Response
+    {
+        return $this->render('sortie/detail.html.twig', [
+            'sortie' => $sr->find($id),
+        ]);
+    }
+
+    #[Route('/sortie/creer', name: 'sortie_creer', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    public function creer(SortieRepository $sr, $id): Response
+    {
+
+
+        return $this->render('sortie/creer.html.twig', [
         ]);
     }
 }
