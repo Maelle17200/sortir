@@ -35,11 +35,20 @@
                     <td>
                         {% for participant in sortie.participants %}
                             {% if participant.pseudo == app.user.pseudo %}
-                                X
+                                <strong>X ({{ participant.pseudo }})</strong>
+                            {% else %}
+                                <a href="{{ path('app_participant_profil', { id: participant.id }) }}">
+                                    {{ participant.pseudo }}
+                                </a>
                             {% endif %}
+                            {% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>
-                    <td>{{ sortie.organisateur.pseudo }}</td>
+                    <td>
+                        <a href="{{ path('app_participant_profil', { id: sortie.organisateur.id }) }}">
+                            {{ sortie.organisateur.pseudo }}
+                        </a>
+                    </td>
                     <td>Actions</td>
                 </tr>
             {% endfor %}
