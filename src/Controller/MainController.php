@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Form\ParticipantType;
+use App\Form\ParticipantForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,7 +26,7 @@ class MainController extends AbstractController
     public function modifierProfil():Response
     {
         $participant = $this->getUser();
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(ParticipantForm::class, $participant);
 
         return $this->render('main/modifierProfil.html.twig', [
             'form' => $form->createView()

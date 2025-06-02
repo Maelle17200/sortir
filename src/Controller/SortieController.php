@@ -6,6 +6,7 @@ use App\DTO\RechercheSortiesDTO;
 use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Form\RechercheSortiesForm;
+use App\Form\SortieCreatModifForm;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,6 @@ final class SortieController extends AbstractController
     public function liste(SortieRepository $sr, Request $request): Response
     {
         $rechercheSortie = new RechercheSortiesDTO();
-        $listeSorties = [];
 
         $form = $this->createForm(RechercheSortiesForm::class, $rechercheSortie);
         $form->handleRequest($request);//récupère les données du formulaire
@@ -76,11 +76,45 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/sortie/creer', name: 'sortie_creer', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
-    public function creer(SortieRepository $sr, $id): Response
+    public function creer(Request $request, EntityManagerInterface $em): Response
     {
+        $sortie = new Sortie();
 
+        $form = $this->createForm(SortieCreatModifForm::class, $sortie);
+        $form->handleRequest($request);//récupère les données du formulaire
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $sortie->setOrganisateur($this->getUser());
+            $sortie->setEtat("En création");
+
+            $em->persist($sortie);
+            $em->flush();
+
+            $this->addFlash("success", "La sortie a bien été créée");
+
+            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+        }
 
         return $this->render('sortie/creer.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form->createView(),
         ]);
+
+    }
+
+    #[Route('/sortie/publier', name: 'sortie_publier', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    public function publier(Request $request, EntityManagerInterface $em, Sortie $sortie): Response
+    {
+
+            $sortie->setEtat("Ouverte");
+
+            $em->persist($sortie);
+            $em->flush();
+
+            $this->addFlash("success", "La sortie est publiée");
+
+            return $this->render('sortie/detail.html.twig', ['id' => $sortie->getId()]);
+
     }
 }

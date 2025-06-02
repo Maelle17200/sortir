@@ -29,27 +29,14 @@ class SortieCreatModifForm extends AbstractType
             ])
             ->add('nbInscriptionMax')
             ->add('infosSortie')
-            ->add('etat', EntityType::class, [
-                'class' => Etat::class,
-                'choice_label' => 'id',
-            ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
-                'choice_label' => 'id',
-            ])
-            ->add('participants', EntityType::class, [
-                'class' => Participant::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
-            ->add('organisateur', EntityType::class, [
-                'class' => Participant::class,
-                'choice_label' => 'id',
-            ])
+                'choice_label' => 'nom',
+            ]);
         ;
     }
 
