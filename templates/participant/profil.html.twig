@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ participant.pseudo }}{% endblock %}
+
+{% block body %}
+    <h1>Profil de {{ participant.pseudo }}</h1>
+
+    <ul>
+        <li>Nom : {{ participant.nom }}</li>
+        <li>Prénom : {{ participant.prenom }}</li>
+        <li>Email : {{ participant.email }}</li>
+        <li>Campus : {{ participant.campus.nom }}</li>
+    </ul>
+
+    <a href="{{ path('sortie_liste') }}">← Retour à la liste des sorties</a>
+{% endblock %}
