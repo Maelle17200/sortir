@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Form\ParticipantType;
+use App\Form\ParticipantForm;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Participant;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ class ParticipantController extends AbstractController
     public function edit(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $user = $this->getUser();
-        $form = $this->createForm(ParticipantType::class, $user);
+        $form = $this->createForm(ParticipantForm::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
