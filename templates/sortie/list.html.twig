@@ -49,7 +49,11 @@
                             {{ sortie.organisateur.pseudo }}
                         </a>
                     </td>
-                    <td>Actions</td>
+                    <td>
+                        <a href="{{ path('sortie_detail', { id: sortie.id }) }}">
+                            Détail
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
         </tboby>
