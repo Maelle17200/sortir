@@ -1,18 +1,11 @@
 {% if app.user %}
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a href="{{ path('main_accueil') }}" title="Retourne à l'accueil" class="navbar-brand"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ path('main_accueil') }}">Home</a>
-                </li>
-                <li>
-                    <span>|</span>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ path('sortie_liste') }}">Sorties</a>
                 </li>
