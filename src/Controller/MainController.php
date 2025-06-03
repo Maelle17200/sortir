@@ -16,12 +16,6 @@ class MainController extends AbstractController
         return $this->render('security/login.html.twig');
     }
 
-    #[Route('/accueil', name: 'main_accueil', methods: ['GET'])]
-    public function accueil():Response
-    {
-        return $this->render('main/accueil.html.twig');
-    }
-
     #[Route('/modifierProfil', name: 'main_modifierProfil', methods: ['GET', 'POST'])]
     public function modifierProfil():Response
     {
