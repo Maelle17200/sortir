@@ -23,31 +23,36 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tboby>
             {% for sortie in sorties %}
-                {% if sortie.etat.libelle != 'En création' or sortie.organisateur.id == app.user.id %}
-                    <tr>
-                        <td>{{ sortie.nom }}</td>
-                        <td>{{ sortie.campus.nom }}</td>
-                        <td>{{ sortie.dateHeureDebut|date }}</td>
-                        <td>Clôture{# TODO #}</td>
-                        <td>{{ sortie.participants.count }} / {{ sortie.nbInscriptionMax }}</td>
-                        <td>{{ sortie.etat.libelle }}</td>
-                        <td>
-                            {% for participant in sortie.participants %}
-                                {% if participant.pseudo == app.user.pseudo %}
-                                    X
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>{{ sortie.organisateur.pseudo }}</td>
-                        <td>
-                            <a href="{{ path('sortie_detail', {id: sortie.id}) }}">Détail</a>
-                        </td>
-                    </tr>
-                {% endif %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.campus.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut|date }}</td>
+                    <td>Clôture{# TODO #}</td>
+                    <td>{{ sortie.participants.count }} / {{ sortie.nbInscriptionMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
+                    <td>
+                        {% for participant in sortie.participants %}
+                            {% if participant.pseudo == app.user.pseudo %}
+                                <strong>X ({{ participant.pseudo }})</strong>
+                            {% else %}
+                                <a href="{{ path('app_participant_profil', { id: participant.id }) }}">
+                                    {{ participant.pseudo }}
+                                </a>
+                            {% endif %}
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_participant_profil', { id: sortie.organisateur.id }) }}">
+                            {{ sortie.organisateur.pseudo }}
+                        </a>
+                    </td>
+                    <td>Actions</td>
+                </tr>
             {% endfor %}
-        </tbody>
+        </tboby>
     </table>
 
 {% endblock %}

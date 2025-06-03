@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Form\ParticipantForm;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Participant;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -35,4 +37,14 @@ class ParticipantController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/participant/profil/{id}', name: 'app_participant_profil')]
+    public function showProfil(Participant $participant): Response
+    {
+        return $this->render('participant/profil.html.twig', [
+            'participant' => $participant
+        ]);
+    }
+
+
 }
