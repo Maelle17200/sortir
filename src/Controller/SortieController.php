@@ -91,7 +91,7 @@ final class SortieController extends AbstractController
             }
 
             $sortie->setOrganisateur($this->getUser());
-            $sortie->setEtat($etat); // ✅ ici on passe un objet Etat
+            $sortie->setEtat($etat);
 
             $em->persist($sortie);
             $em->flush();
@@ -115,7 +115,7 @@ final class SortieController extends AbstractController
             throw new \Exception('Etat "Ouverte" introuvable en base de données.');
         }
 
-        $sortie->setEtat($etat); // ✅ ici aussi
+        $sortie->setEtat($etat);
 
         $em->persist($sortie);
         $em->flush();
