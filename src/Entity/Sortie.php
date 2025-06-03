@@ -10,8 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-#[UniqueEntity('nom')]
+//UniqueEntity et UniqueConstraint ensemble obligatoirement
+//Pour le formulaire
+#[UniqueEntity(fields: ['nom', 'campus', 'date'], message: "La sortie existe déjà")]
+//Pour la base
+#[ORM\UniqueConstraint(columns: ['nom', 'campus', 'date'])]
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
 {

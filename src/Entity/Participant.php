@@ -11,9 +11,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//quand contraintes sur 2 attribut => contrainte sur l'attribut directement
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email', 'pseudo'])]
 #[UniqueEntity(fields: ['email'], message: 'Cet email existe déjà.')]
+#[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo existe déjà.')]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -24,7 +25,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message: "Veuillez renseigner un email valide.")]
     #[Assert\NotBlank(message: "Veuillez renseigner un email.")]
     #[Assert\Length(max: 180, maxMessage: "Cet email est trop long, 180 caractères max.")]
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     /**
@@ -46,7 +47,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         minMessage: "Ce pseudo est trop court, 2 caractères min.",
         maxMessage: "Ce pseudo est trop long, 180 caractères max.",
     )]
-    #[ORM\Column]
+    #[ORM\Column (length: 180, unique: true)]
     private ?string $pseudo = null;
 
     #[Assert\NotBlank(message: "Veuillez renseigner un nom.")]
