@@ -20,12 +20,14 @@ class SortieCreatModifForm extends AbstractType
             ->add('nom')
             ->add('dateHeureDebut', null, [
                 'widget' => 'single_text',
+                'input' => 'datetime',
             ])
             ->add('duree', null, [
                 'widget' => 'single_text',
             ])
             ->add('dateLimiteInscription', null, [
                 'widget' => 'single_text',
+                'input' => 'datetime',
             ])
             ->add('nbInscriptionMax')
             ->add('infosSortie')

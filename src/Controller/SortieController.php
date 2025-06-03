@@ -81,12 +81,17 @@ final class SortieController extends AbstractController
         $sortie = new Sortie();
 
         $form = $this->createForm(SortieCreatModifForm::class, $sortie);
-        $form->handleRequest($request);//récupère les données du formulaire
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+            if (!$etat) {
+                throw new \Exception('Etat "En création" introuvable en base de données.');
+            }
+
             $sortie->setOrganisateur($this->getUser());
-            $sortie->setEtat("En création");
+            $sortie->setEtat($etat); // ✅ ici on passe un objet Etat
 
             $em->persist($sortie);
             $em->flush();
@@ -100,21 +105,23 @@ final class SortieController extends AbstractController
             'sortie' => $sortie,
             'form' => $form->createView(),
         ]);
-
     }
 
     #[Route('/sortie/publier', name: 'sortie_publier', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
     public function publier(Request $request, EntityManagerInterface $em, Sortie $sortie): Response
     {
+        $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        if (!$etat) {
+            throw new \Exception('Etat "Ouverte" introuvable en base de données.');
+        }
 
-            $sortie->setEtat("Ouverte");
+        $sortie->setEtat($etat); // ✅ ici aussi
 
-            $em->persist($sortie);
-            $em->flush();
+        $em->persist($sortie);
+        $em->flush();
 
-            $this->addFlash("success", "La sortie est publiée");
+        $this->addFlash("success", "La sortie est publiée");
 
-            return $this->render('sortie/detail.html.twig', ['id' => $sortie->getId()]);
-
+        return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
     }
 }
