@@ -36,12 +36,7 @@
                         {% for participant in sortie.participants %}
                             {% if participant.pseudo == app.user.pseudo %}
                                 <strong>X ({{ participant.pseudo }})</strong>
-                            {% else %}
-                                <a href="{{ path('app_participant_profil', { id: participant.id }) }}">
-                                    {{ participant.pseudo }}
-                                </a>
                             {% endif %}
-                            {% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>
                     <td>
