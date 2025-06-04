@@ -92,6 +92,14 @@ final class SortieController extends AbstractController
             $sortie->setOrganisateur($this->getUser());
             $sortie->setEtat($etat);
 
+            if (!$sortie->getLieu()) {
+                $this->addFlash('danger', 'Veuillez sélectionner un lieu pour la sortie.');
+                return $this->render('sortie/creer.html.twig', [
+                    'sortie' => $sortie,
+                    'form' => $form->createView(),
+                ]);
+            }
+
             $em->persist($sortie);
             $em->flush();
 
@@ -123,4 +131,66 @@ final class SortieController extends AbstractController
 
         return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
     }
+
+    #[Route('/sortie/modifier/{id}', name: 'sortie_modifier', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    public function modifier(Sortie $sortie, Request $request, EntityManagerInterface $em): Response
+    {
+        // Sécurité : seul l'organisateur peut modifier la sortie
+        if ($sortie->getOrganisateur() !== $this->getUser()) {
+            $this->addFlash("danger", "Vous n'avez pas le droit de modifier cette sortie.");
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+        $form = $this->createForm(SortieCreatModifForm::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if (!$sortie->getLieu()) {
+                $this->addFlash('danger', 'Veuillez sélectionner un lieu.');
+                return $this->render('sortie/modification.html.twig', [
+                    'sortie' => $sortie,
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            $action = $request->request->get('action');
+
+            switch ($action) {
+                case 'enregistrer':
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+                    $sortie->setEtat($etat);
+                    $this->addFlash('success', 'Sortie enregistrée en brouillon.');
+                    break;
+
+                case 'publier':
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+                    $sortie->setEtat($etat);
+                    $this->addFlash('success', 'Sortie publiée.');
+                    break;
+
+                case 'supprimer':
+                    $em->remove($sortie);
+                    $em->flush();
+                    $this->addFlash('danger', 'Sortie supprimée.');
+                    return $this->redirectToRoute('sortie_liste');
+
+                default:
+                    $this->addFlash('warning', 'Action non reconnue.');
+            }
+
+
+
+            $em->persist($sortie);
+            $em->flush();
+
+            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+        }
+
+        return $this->render('sortie/modification.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form->createView(),
+        ]);
+    }
+
 }

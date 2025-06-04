@@ -12,9 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 //UniqueEntity et UniqueConstraint ensemble obligatoirement
 //Pour le formulaire
-#[UniqueEntity(fields: ['nom', 'campus', 'date'], message: "La sortie existe déjà")]
+#[UniqueEntity(fields: ['nom', 'campus', 'dateHeureDebut'], message: "La sortie existe déjà")]
 //Pour la base
-#[ORM\UniqueConstraint(columns: ['nom', 'campus', 'date'])]
+#[ORM\UniqueConstraint(columns: ['nom', 'campus_id', 'date_heure_debut'])]
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
 {
@@ -62,6 +62,7 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Etat $etat = null;
 
+    #[Assert\NotNull(message: "Veuillez sélectionner un lieu")]
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
