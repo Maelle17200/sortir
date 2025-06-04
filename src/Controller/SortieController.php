@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\RechercheSortiesDTO;
 use App\Entity\Etat;
 use App\Entity\Sortie;
+use App\Form\AnnulationSortieForm;
 use App\Form\RechercheSortiesForm;
 use App\Form\SortieCreatModifForm;
 use App\Repository\ParticipantRepository;
@@ -238,4 +239,43 @@ final class SortieController extends AbstractController
         ]);
     }
 
+    #[Route('/sortie/annuler/{id}', name: 'sortie_annuler', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    public function annuler(EntityManagerInterface $em, Sortie $sortie, Request $request): Response
+    {
+        if ($sortie->getOrganisateur() !== $this->getUser() && $sortie->getEtat()->getLibelle() !== "Ouverte") {
+            $this->addFlash("danger", "Vous n'avez pas le droit d'annuler cette sortie.");
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+        if ($sortie->getDateHeureDebut() > new \DateTime()) {
+
+            $form = $this->createForm(AnnulationSortieForm::class, $sortie);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']));
+
+                $em->persist($sortie);
+                $em->flush();
+
+                $this->addFlash("warning", "La sortie a été annulée.");
+
+                return $this->redirectToRoute('sortie_liste');
+            }
+
+            return $this->render('sortie/annuler.html.twig', [
+                'sortie' => $sortie,
+                'form' => $form->createView(),
+            ]);
+
+        } else {
+
+            $this->addFlash("warning", "Vous ne pouvez pas annuler une sortie qui a déjà commencé.");
+
+            return $this->redirectToRoute('sortie_liste');
+
+        }
+
+
+    }
 }

@@ -38,6 +38,7 @@ class Sortie
     private ?\DateTimeImmutable $dateHeureDebut = null;
 
     #[Assert\NotBlank(message: "Veuillez renseigner la durée de la sortie")]
+    #[Assert\Positive(message: "La durée doit être positive")]
     #[ORM\Column]
     private ?int $duree = null;
 
@@ -45,6 +46,7 @@ class Sortie
     #[ORM\Column]
     private ?\DateTimeImmutable $dateLimiteInscription = null;
 
+    #[Assert\Positive(message: "Le nombre de participant doit être positif")]
     #[ORM\Column]
     private ?int $nbInscriptionMax = null;
 
@@ -80,6 +82,25 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
+
+    #[Assert\Length(
+        min: 10,
+        max: 500,
+        minMessage: "Le texte est trop court. 10 caractères minimum.",
+        maxMessage: "Le text est trop long. 500 caractères maximum."
+    )]
+    #[ORM\Column]
+    private ?String $motifAnnulation = null;
+
+    public function getMotifAnnulation(): ?string
+    {
+        return $this->motifAnnulation;
+    }
+
+    public function setMotifAnnulation(?string $motifAnnulation): void
+    {
+        $this->motifAnnulation = $motifAnnulation;
+    }
 
     public function __construct()
     {
