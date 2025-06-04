@@ -13,12 +13,16 @@
         </div>
     {% endfor %}
     <h1>Détails de la sortie "{{ sortie.nom }}"</h1>
+    <a class="btn btn-secondary" href="{{ path('sortie_liste') }}">Retour à la liste</a>
     <dl>
+        <dt>Etat : </dt>
+        <dd>{{ sortie.etat.libelle }}</dd>
+
         <dt>Date de début : </dt>
         <dd>{{ sortie.dateHeureDebut|date("D d M Y", "Europe/Paris") }}</dd>
 
-        <dt>Durée</dt>
-        <dd>{{ sortie.duree|date("H:m:s") }}</dd>
+        <dt>Durée (en minutes)</dt>
+        <dd>{{ sortie.duree }}</dd>
 
         <dt>Date limite d'inscription :</dt>
         <dd>{{ sortie.dateLimiteInscription|date("D d M Y", "Europe/Paris") }}</dd>
@@ -37,7 +41,7 @@
                     <p>📅 Date de début: {{ sortie.dateHeureDebut|date("D d M Y", "Europe/Paris") }}</p>
                     <p>🕒 Date limite d'inscription : {{ sortie.dateLimiteInscription|date("D d M Y", "Europe/Paris") }}</p>
                     <p>👥 Participants max : {{ sortie.nbInscriptionMax }}</p>
-                    <p>⏱️ Durée: {{ sortie.duree|date("H:i:s") }}</p>
+                    <p>⏱️ Durée: {{ sortie.duree }} minutes</p>
                     <p>🧑 Organisateur: {{ sortie.organisateur.pseudo }}</p>
                 </div>
                 <div class="col-md-6">
