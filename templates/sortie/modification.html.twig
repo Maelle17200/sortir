@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}
+Modification de la sortie | {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow form-background">
+                    <div class="card-header text-center">
+                        <h2 class="mb-0">Modification de la sortie</h2>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.nom) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.dateHeureDebut) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.dateLimiteInscription) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.nbInscriptionMax) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.duree) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.infosSortie) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.campus)}}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.lieu)}}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Ville</label>
+                                <div id="lieu_cp" class="form-control-plaintext"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Latitude / Longitude</label>
+                                <div id="lieu_latlng" class="form-control-plaintext"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Rue</label>
+                                <div id="lieu_rue" class="form-control-plaintext"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 d-flex flex-wrap gap-2 justify-content-center">
+                            {{ form_row(form.enregistrer) }}
+                            {{ form_row(form.publier) }}
+
+                            <a href="{{ path('sortie_liste') }}" class="btn btn-light w-100">
+                                Retour à la liste
+                            </a>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -30,6 +30,7 @@ class SortieCreatModifForm extends AbstractType
             ->add('duree', IntegerType::class, [])
             ->add('dateLimiteInscription', DateTimeType::class, [
                 'widget' => 'single_text',
+                'input' => 'datetime',
             ])
             ->add('nbInscriptionMax', IntegerType::class, [])
             ->add('infosSortie', TextareaType::class, [])
@@ -48,8 +49,8 @@ class SortieCreatModifForm extends AbstractType
             ->add('publier', SubmitType::class, [
                 'label' => 'Publier',
                 'attr' => ['class' => 'btn btn-secondary'],
-            ])
-        ;
+            ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

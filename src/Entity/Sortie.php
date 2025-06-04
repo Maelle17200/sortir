@@ -62,6 +62,7 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Etat $etat = null;
 
+    #[Assert\NotNull(message: "Veuillez sélectionner un lieu")]
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
