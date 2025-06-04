@@ -12,9 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 //UniqueEntity et UniqueConstraint ensemble obligatoirement
 //Pour le formulaire
-#[UniqueEntity(fields: ['nom', 'campus', 'date'], message: "La sortie existe déjà")]
+#[UniqueEntity(fields: ['nom', 'campus', 'dateHeureDebut'], message: "La sortie existe déjà")]
 //Pour la base
-#[ORM\UniqueConstraint(columns: ['nom', 'campus', 'date'])]
+#[ORM\UniqueConstraint(columns: ['nom', 'campus_id', 'date_heure_debut'])]
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
 {
@@ -38,8 +38,8 @@ class Sortie
     private ?\DateTimeImmutable $dateHeureDebut = null;
 
     #[Assert\NotBlank(message: "Veuillez renseigner la durée de la sortie")]
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $duree = null;
+    #[ORM\Column]
+    private ?int $duree = null;
 
     #[Assert\NotBlank(message: "Veuillez renseigner la date limite pour s'inscrire")]
     #[ORM\Column]
@@ -114,12 +114,12 @@ class Sortie
         return $this;
     }
 
-    public function getDuree(): ?\DateTimeImmutable
+    public function getDuree(): int
     {
         return $this->duree;
     }
 
-    public function setDuree(\DateTimeImmutable $duree): static
+    public function setDuree(int $duree): static
     {
         $this->duree = $duree;
 

@@ -1,11 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
 
     <h1>Proposer une nouvelle sortie</h1>
     {{ form_start(form) }}
+    {{ form_errors(form) }}
     {{ form_widget(form) }}
-    <button class="btn btn-secondary">Enregistrer</button>
+    <div>
+        <a class="btn btn-secondary mt-2" href="{{ path('sortie_liste') }}">Retour à la liste</a>
+    </div>
     {{ form_end(form) }}
 
 {% endblock %}

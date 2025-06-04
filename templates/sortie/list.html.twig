@@ -3,6 +3,14 @@
 {% block title %}{{ parent() }} | Liste des sorties{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     <h1>Filtrer les sorties</h1>
     {{ form_start(rechercheSortiesForm) }}
     {{ form_widget(rechercheSortiesForm) }}
@@ -25,31 +33,43 @@
         </thead>
         <tboby>
             {% for sortie in sorties %}
-                <tr>
-                    <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.campus.nom }}</td>
-                    <td>{{ sortie.dateHeureDebut|date }}</td>
-                    <td>Clôture{# TODO #}</td>
-                    <td>{{ sortie.participants.count }} / {{ sortie.nbInscriptionMax }}</td>
-                    <td>{{ sortie.etat.libelle }}</td>
-                    <td>
-                        {% for participant in sortie.participants %}
-                            {% if participant.pseudo == app.user.pseudo %}
-                                <strong>X ({{ participant.pseudo }})</strong>
+                {% if sortie.etat.libelle != 'En création' or sortie.organisateur.pseudo == app.user.pseudo %}
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.campus.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut|date }}</td>
+                        <td>Clôture{# TODO #}</td>
+                        <td>{{ sortie.participants.count }} / {{ sortie.nbInscriptionMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>
+                            {% for participant in sortie.participants %}
+                                {% if participant.pseudo == app.user.pseudo %}
+                                    <strong>X ({{ participant.pseudo }})</strong>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_participant_profil', { id: sortie.organisateur.id }) }}">
+                                {{ sortie.organisateur.pseudo }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('sortie_detail', { id: sortie.id }) }}">
+                                Détail
+                            </a>
+                            {% if sortie.etat.libelle == "Ouverte" and app.user not in sortie.participants %}
+                                <a href="{{ path('sortie_inscrire', { id: sortie.id }) }}">S'inscrire</a>
                             {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        <a href="{{ path('app_participant_profil', { id: sortie.organisateur.id }) }}">
-                            {{ sortie.organisateur.pseudo }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ path('sortie_detail', { id: sortie.id }) }}">
-                            Détail
-                        </a>
-                    </td>
-                </tr>
+                            {% if sortie.etat.libelle == "Ouverte" and app.user in sortie.participants %}
+                                <a href="{{ path('sortie_desister', { id: sortie.id }) }}">Se désister</a>
+                            {% endif %}
+                            {% if sortie.etat.libelle == "En création" %}
+                                <a href="{{ path('sortie_publier', { id: sortie.id }) }}">Publier</a>
+                            {% endif %}
+                            <a href=""></a>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tboby>
     </table>

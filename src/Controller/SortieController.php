@@ -7,7 +7,9 @@ use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Form\RechercheSortiesForm;
 use App\Form\SortieCreatModifForm;
+use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,61 +68,108 @@ final class SortieController extends AbstractController
         ]);
     }
 
+    //Affiche le détail d'une sortie
     #[Route('/sortie/{id}', name: 'sortie_detail', requirements: ['id'=>'\d+'], methods: ['GET'])]
-    public function detail(SortieRepository $sr, $id): Response
+    public function detail(SortieRepository $sr, int $id): Response
     {
         return $this->render('sortie/detail.html.twig', [
             'sortie' => $sr->find($id),
         ]);
     }
 
-    #[Route('/sortie/creer', name: 'sortie_creer', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
-    public function creer(Request $request, EntityManagerInterface $em): Response
+    //Enregistrer une sortie
+    #[Route('/sortie/enregistrer', name: 'sortie_enregistrer', methods: ['GET', 'POST'])]
+    public function enregistrer(Request $request, EntityManagerInterface $em): Response
     {
         $sortie = new Sortie();
-
         $form = $this->createForm(SortieCreatModifForm::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->getData());
 
+            $sortie->setOrganisateur($this->getUser());
             $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
             if (!$etat) {
                 throw new \Exception('Etat "En création" introuvable en base de données.');
             }
-
-            $sortie->setOrganisateur($this->getUser());
             $sortie->setEtat($etat);
-
+            dump($sortie);
             $em->persist($sortie);
             $em->flush();
 
-            $this->addFlash("success", "La sortie a bien été créée");
+            //Si le submit cliqué est "enregistrer" le traitement s'arrête là, renvoie sur le détail de la sortie créée
+            if ($form->get('enregistrer')->isClicked()) {
+                $this->addFlash("success", "La sortie a bien été créée");
+                return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+            }
 
-            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+            //Si le submit est "publier" le traitement continu dans sortie_publier, pour changer l'état.
+            if ($form->get('publier')->isClicked()) {
+                return $this->redirectToRoute('sortie_publier', ['id' => $sortie->getId()]);
+            }
         }
 
         return $this->render('sortie/creer.html.twig', [
-            'sortie' => $sortie,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/sortie/publier', name: 'sortie_publier', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
-    public function publier(Request $request, EntityManagerInterface $em, Sortie $sortie): Response
+    //Publier une sortie
+    #[Route('/sortie/{id}/publier', name: 'sortie_publier', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    public function publier(int $id, EntityManagerInterface $em): Response
     {
+        $sortie = $em->getRepository(Sortie::class)->find($id);
         $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+
         if (!$etat) {
             throw new \Exception('Etat "Ouverte" introuvable en base de données.');
         }
-
         $sortie->setEtat($etat);
 
         $em->persist($sortie);
         $em->flush();
 
-        $this->addFlash("success", "La sortie est publiée");
+        $this->addFlash("success", "La sortie a bien été publiée");
 
         return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+
+    }
+
+    #[Route('/sortie/{id}/inscrire', name: 'sortie_inscrire', requirements: ['id'=>'\d+'], methods: ['GET','POST'])]
+    public function inscrire(int $id, SortieRepository $sr, ParticipantRepository $pr, EntityManagerInterface $em): Response
+    {
+        $sortie = $sr->find($id);
+
+        if($sortie->getEtat()->getLibelle() == "Ouverte"){
+            $newParticipant = $pr->find($this->getUser()->getId());
+            $sortie->addParticipant($newParticipant);
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash("success", "Vous avez été inscrit à la sortie" . $sortie->getNom() . ".");
+            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+        } else {
+            $this->addFlash("danger", "Impossible de s'inscrire, la sortie" . $sortie->getNom() . "n'est pas ouverte. Son statut est : " . $sortie->getEtat()->getLibelle());
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+    }
+
+    #[Route('/sortie/{id}/desister', name: 'sortie_desister', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    public function desister(int $id, SortieRepository $sr, ParticipantRepository $pr, EntityManagerInterface $em): Response
+    {
+        $sortie = $sr->find($id);
+
+        if($sortie->getEtat()->getLibelle() == "Ouverte"){
+            $oldParticipant = $pr->find($this->getUser()->getId());
+            $sortie->removeParticipant($oldParticipant);
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash("success", "Vous vous ête désisté pour la sortie" . $sortie->getNom() . ".");
+            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+        } else {
+            $this->addFlash("danger", "impossible de se désister, la sortie" . $sortie->getNom() . "n'est pas ouverte. Son statut est : " . $sortie->getEtat()->getLibelle());
+            return $this->redirectToRoute('sortie_liste');
+        }
     }
 }

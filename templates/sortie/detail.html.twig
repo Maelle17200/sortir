@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     <h1>Détails de la sortie "{{ sortie.nom }}"</h1>
     <dl>
         <dt>Date de début : </dt>
@@ -39,6 +47,7 @@
             </ul>
         </dd>
     </dl>
+    <a class="btn btn-secondary" href="{{ path('sortie_liste') }}">Retour à la liste</a>
 {% endblock %}
 
 {% block title %}

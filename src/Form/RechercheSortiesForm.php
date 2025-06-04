@@ -49,7 +49,6 @@ class RechercheSortiesForm extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'empty_data' => '2038-01-01 00:00:00',
-                //'input' => 'datetime_immutable',
             ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
