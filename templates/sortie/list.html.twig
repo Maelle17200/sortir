@@ -31,7 +31,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tboby>
+        <tbody>
             {% for sortie in sorties %}
                 {% if sortie.etat.libelle != 'En création' and sortie.etat.libelle != 'Historisée' or sortie.organisateur.pseudo == app.user.pseudo %}
                     <tr>
@@ -76,7 +76,7 @@
                     </tr>
                 {% endif %}
             {% endfor %}
-        </tboby>
+        </tbody>
     </table>
 
 {% endblock %}
