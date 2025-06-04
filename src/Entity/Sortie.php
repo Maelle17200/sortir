@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\EntityListener\SortieListener;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\EntityListeners([SortieListener::class])]
 //UniqueEntity et UniqueConstraint ensemble obligatoirement
 //Pour le formulaire
 #[UniqueEntity(fields: ['nom', 'campus', 'dateHeureDebut'], message: "La sortie existe déjà")]
