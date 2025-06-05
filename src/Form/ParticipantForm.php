@@ -6,9 +6,11 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ParticipantForm extends AbstractType
 {
@@ -26,6 +28,19 @@ class ParticipantForm extends AbstractType
             ->add('nom')
             ->add('telephone')
             ->add('email')
+            ->add('image', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Assert\Image([
+                        'maxSize' => '1024k',
+                        'maxSizeMessage' => 'L\'image ne peut pas dépasser 1 Mo.',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image au format JPEG ou PNG uniquement.',
+                    ])
+                ],
+                'label' => "Image de profil (facultatif)",
+            ])
             ->add('password', PasswordType::class, [
                 'required' => true, // Le mot de passe n'est pas requis lors de la modif
                 'mapped' => true,

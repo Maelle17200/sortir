@@ -53,13 +53,10 @@ class RechercheSortiesForm extends AbstractType
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'nom',
+                'placeholder' => 'Tous les campus',
                 'label' => 'Sortie rattachée au campus de',
-                'required' => true,
-                'data' => $campus,
-            ])
-            ->add('tousCampus', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Tous les campus',
+                'data' => $campus,
             ])
             ->add('userOrganisateur', CheckboxType::class, [
                 'label' => "Sorties dont je suis l'organisateur/trice",

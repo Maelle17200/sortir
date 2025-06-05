@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Page d'administration</h1>
+
+    <div class="flex justify-content-around">
+        <a class="btn btn-success" href="{{ path("admin_register") }}">Gérer les utilisateurs</a>
+        <a class="btn btn-success" href="">Gérer les villes</a>
+        <a class="btn btn-success" href="">Gérer les campus</a>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Accueil administrateur | {{ parent() }}
+{% endblock %}
+

@@ -3,7 +3,20 @@
 {% block title %}Profil de {{ participant.pseudo }}{% endblock %}
 
 {% block body %}
+
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     <h1>Profil de {{ participant.pseudo }}</h1>
+
+    {% if participant.imageURL %}
+        <img src="{{ asset('upload/img/' ~ participant.imageURL) }}" alt="Image de profil de {{ participant.pseudo }}" width="200px">
+    {% endif %}
 
     <ul>
         <li>Nom : {{ participant.nom }}</li>

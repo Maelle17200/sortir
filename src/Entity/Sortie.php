@@ -35,6 +35,7 @@ class Sortie
     #[ORM\Column(length: 180)]
     private ?string $nom = null;
 
+    #[Assert\GreaterThanOrEqual(value: 'now', message: 'La date doit être aujourd\'hui ou postérieure')]
     #[Assert\NotBlank(message: "Veuillez renseigner la date du début de la sortie")]
     #[ORM\Column]
     private ?\DateTimeImmutable $dateHeureDebut = null;
@@ -44,6 +45,7 @@ class Sortie
     #[ORM\Column]
     private ?int $duree = null;
 
+    //TODO validation dateLimiteInscription par callback utilisant ExecutionContextInterface
     #[Assert\NotBlank(message: "Veuillez renseigner la date limite pour s'inscrire")]
     #[ORM\Column]
     private ?\DateTimeImmutable $dateLimiteInscription = null;

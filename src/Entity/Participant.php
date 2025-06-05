@@ -78,6 +78,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $telephone = null;
 
+    #[ORM\Column (nullable: true)]
+    private ?string $imageURL = null;
+
     #[ORM\ManyToOne(targetEntity: Campus::class, inversedBy: "participants")]
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
@@ -94,12 +97,23 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
     private Collection $sortiesOrganisees;
 
+
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
         $this->sortiesOrganisees = new ArrayCollection();
     }
 
+    public function getImageURL(): ?string
+    {
+        return $this->imageURL;
+    }
+
+    public function setImageURL(?string $imageURL): void
+    {
+        $this->imageURL = $imageURL;
+    }
 
     public function getId(): ?int
     {
