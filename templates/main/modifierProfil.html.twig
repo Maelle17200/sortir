@@ -5,6 +5,12 @@
 {% block body %}
     <h1>Modifier mon profil</h1>
 
+    {% if app.user.imageURL %}
+        <img src="{{ asset('upload/img/' ~ app.user.imageURL) }}" alt="Image de profil de {{ app.user.pseudo }}" width="200px">
+        <a class="btn btn-primary" href="{{ path('participant_suppr_img', {id: app.user.id}) }}">Supprimer L'image</a>
+    {% endif %}
+
+
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn btn-primary">Enregistrer</button>
