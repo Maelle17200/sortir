@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class AdminController extends AbstractController
 {
     #[Route('/accueil', name: 'admin_accueil', methods: ['GET','POST'])]
-    public function accueil(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function accueil(): Response
     {
         return $this->render('admin/admin.html.twig', [
 
@@ -24,7 +24,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/register', name: 'admin_register', methods: ['GET','POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function utilisateurs(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
         $user = new Participant();
         $form = $this->createForm(RegistrationForm::class, $user);
@@ -50,8 +50,12 @@ class AdminController extends AbstractController
             return $security->login($user, 'form_login', 'main');
         }
 
+        $listeParticipants = $entityManager->getRepository(Participant::class)->findAll();
+
         return $this->render('admin/register.html.twig', [
             'registrationForm' => $form,
+            'listeParticipants' => $listeParticipants,
+
         ]);
     }
 }

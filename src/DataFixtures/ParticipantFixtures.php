@@ -43,6 +43,7 @@ class ParticipantFixtures extends Fixture
             $user->setTelephone('0607080910');
             $user->setPassword($this->passwordHasher->hashPassword($admin, '123456'));
             $user->setRoles(['ROLE_USER']);
+            $user->setActif(true);
             $user->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
             $manager->persist($user);
             //vérifie que la référence n'existe pas avant de l'ajouter, utilse si la boucle tourne plusieurs fois
@@ -63,6 +64,7 @@ class ParticipantFixtures extends Fixture
             $user->setTelephone('0607080910');
             $user->setPassword($this->passwordHasher->hashPassword($admin, '123456'));
             $user->setRoles(['']);
+            $user->setActif(false);
             $user->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
             $manager->persist($user);
         }

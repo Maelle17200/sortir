@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Gestion des utilisateurs | {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Inscription</h1>
+    <h1>Gestion des utilisateurs</h1>
+    <h2>Créer un nouvel utilisateur</h2>
     {{ form_errors(registrationForm) }}
     {{ form_start(registrationForm) }}
     {{ form_row(registrationForm.prenom) }}
@@ -15,4 +16,34 @@
     {{ form_row(registrationForm.campus) }}
     <button type="submit" class="btn btn-primary">S'inscrire</button>
     {{ form_end(registrationForm) }}
+
+    <h2>Liste de tous les utilisateurs</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Actif</th>
+                <th>Pseudo</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Campus</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for participant in listeParticipants %}
+                <tr>
+                    <td>
+                        {% if participant.actif %}
+                            X
+                        {% endif %}
+                    </td>
+                    <td>{{ participant.pseudo }}</td>
+                    <td>{{ participant.nom }}</td>
+                    <td>{{ participant.prenom }}</td>
+                    <td>{{ participant.telephone }}</td>
+                    <td>{{ participant.campus.nom }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
