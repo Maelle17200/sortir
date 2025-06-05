@@ -39,7 +39,6 @@ final class SortieController extends AbstractController
             $dateDebutRecherche = $formData->getDateHeureDebutRecherche();
             $dateFinRecherche = $formData->getDateHeureFinRecherche();
             $campus = $formData->getCampus();
-            $tousCampus = $formData->isTousCampus();
             $user = $this->getUser();
             $userOrganisateur = $formData->isUserOrganisateur();
             $userInscrit = $formData->isUserInscrit();
@@ -47,7 +46,7 @@ final class SortieController extends AbstractController
             $sortiesTerminees = $formData->isSortiesTerminees();
 
             //Appel de la base avec ces données
-            $listeSorties = $sr->getByRecherche($nom, $dateDebutRecherche, $dateFinRecherche, $campus, $tousCampus, $user, $userOrganisateur, $userInscrit, $userPasInscrit, $sortiesTerminees);
+            $listeSorties = $sr->getByRecherche($nom, $dateDebutRecherche, $dateFinRecherche, $campus, $user, $userOrganisateur, $userInscrit, $userPasInscrit, $sortiesTerminees);
 
             //Passe à Twig les sorties filtrées, réaffiche le formulaire
             return $this->render('sortie/list.html.twig', [

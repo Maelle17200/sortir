@@ -25,7 +25,6 @@ class SortieRepository extends ServiceEntityRepository
         ?\DateTimeImmutable $dateDebutRecherche,
         ?\DateTimeImmutable $dateFinRecherche,
         ?campus $campus,
-        bool $tousCampus,
         ?UserInterface $user,
         bool $userOrganisateur,
         bool $userInscrit,
@@ -44,7 +43,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter(':nom','%'.$nom.'%');
         }
 
-        if($campus && !$tousCampus){
+        if($campus){
             $queryBuilder
                 ->andWhere('sortie.campus = :campus')
                 ->setParameter('campus',$campus);

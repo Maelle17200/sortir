@@ -34,21 +34,19 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
             $organisateurId = $faker->numberBetween(1,20);
             $sortie->setOrganisateur($this->getReference('participant'.$organisateurId, Participant::class));
             //4 campus
-//            $sortie->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
             $sortie->setCampus($sortie->getOrganisateur()->getCampus());
             //7 états
             $sortie->setEtat($this->getReference('etat'.$faker->numberBetween(1,7), Etat::class));
             //10 lieux différents (cf LieuFixtures)
             $sortie->setLieu($this->getReference('lieu'.$faker->numberBetween(1,10), Lieu::class));
-            //20 participants actifs différents (cf ParticipantFixtures)
 
-
-
-            //Tire au sort le nombre de participants à la sortie, puis cré le tableau des participants
+            //Tire au sort le nombre de participants à la sortie, puis crée le tableau des participants
             $nbParticipants = $faker->numberBetween(1, $sortie->getNbInscriptionMax());
             for ($j = 0; $j < $nbParticipants; $j++) {
+
                 $participant = $this->getReference('participant'.$faker->numberBetween(1,20), Participant::class);
 
+                // vérifie que le participant tiré au sort fait bien parie du même campus que la sortie
                 if($participant->getCampus() == $sortie->getCampus()){
                     $sortie->addParticipant($participant);
                 }

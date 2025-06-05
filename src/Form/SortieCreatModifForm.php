@@ -16,31 +16,60 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SortieCreatModifForm extends AbstractType
 {
+
+    public function __construct(private TokenStorageInterface $tokenStorage)
+    {
+
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof Participant)
+        {
+            // Récupérer le campus de l'utilisateur connecté
+            $campus = $user->getCampus();
+        }
+
         $builder
             ->add('nom', TextType::class)
             ->add('dateHeureDebut', DateTimeType::class, [
+                'label' => 'Début de la sortie',
                 'widget' => 'single_text',
                 'input' => 'datetime',
             ])
-            ->add('duree', IntegerType::class, [])
+            ->add('duree', IntegerType::class, [
+                'label' => 'Durée en minutes'
+            ])
             ->add('dateLimiteInscription', DateTimeType::class, [
+                'label' => "Date limite d'inscription",
                 'widget' => 'single_text',
                 'input' => 'datetime',
             ])
-            ->add('nbInscriptionMax', IntegerType::class, [])
-            ->add('infosSortie', TextareaType::class, [])
+            ->add('nbInscriptionMax', IntegerType::class, [
+                'label' => "Nombre maximum de participants",
+
+            ])
+            ->add('infosSortie', TextareaType::class, [
+                'label' => "Informations sur la sortie",
+            ])
             ->add('lieu', EntityType::class, [
+                'label' => "Lieu",
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
             ])
             ->add('campus', EntityType::class, [
+                'label' => "Campus",
                 'class' => Campus::class,
                 'choice_label' => 'nom',
+                'disabled' => true,
+                'data' => $campus,
             ])
             ->add('enregistrer', SubmitType::class, [
                 'label' => 'Enregistrer',
