@@ -10,6 +10,7 @@ use App\Form\RechercheSortiesForm;
 use App\Form\SortieCreatModifForm;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use App\Service\HistoriserSortiesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +22,9 @@ final class SortieController extends AbstractController
 {
     //Affiche et traite le formulaire de tri et la liste des sorties
     #[Route('/sortie', name: 'sortie_liste', methods: ['GET', 'POST'])]
-    public function liste(SortieRepository $sr, Request $request): Response
+    public function liste(SortieRepository $sr, Request $request, HistoriserSortiesService $historiser): Response
     {
+        $historiser->historiserSorties();
         $rechercheSortie = new RechercheSortiesDTO();
 
         $form = $this->createForm(RechercheSortiesForm::class, $rechercheSortie);
