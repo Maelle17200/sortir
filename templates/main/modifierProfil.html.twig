@@ -1,9 +1,9 @@
-{% extends '../base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Modifier mon profil{% endblock %}
 
 {% block body %}
-    <h1>Modifier mon profil</h1>
+    <h1>Modifier le profil de {{ participant.pseudo }}</h1>
 
     {% if app.user.imageURL %}
         <img src="{{ asset('upload/img/' ~ app.user.imageURL) }}" alt="Image de profil de {{ app.user.pseudo }}" width="200px">

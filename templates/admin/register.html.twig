@@ -27,6 +27,7 @@
                 <th>Prénom</th>
                 <th>Téléphone</th>
                 <th>Campus</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -37,11 +38,12 @@
                             X
                         {% endif %}
                     </td>
-                    <td>{{ participant.pseudo }}</td>
+                    <td><a href="{{ path('app_participant_profil', {id: participant.id}) }}">{{ participant.pseudo }}</a></td>
                     <td>{{ participant.nom }}</td>
                     <td>{{ participant.prenom }}</td>
                     <td>{{ participant.telephone }}</td>
                     <td>{{ participant.campus.nom }}</td>
+                    <td><a class="btn btn-primary" href="{{ path('app_modifier_participant', {id: participant.id}) }}">Modifier</a></td>
                 </tr>
             {% endfor %}
         </tbody>

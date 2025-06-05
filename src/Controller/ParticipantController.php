@@ -17,19 +17,19 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ParticipantController extends AbstractController
 {
-    #[Route('/participant/modifier', name: 'app_modifier_participant')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function edit(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher, SluggerInterface $slugger): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    #[Route('/participant/{id}/modifier', name: 'app_modifier_participant')]
+//    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function edit(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher, SluggerInterface $slugger): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
-        $user = $this->getUser();
-        $form = $this->createForm(ParticipantForm::class, $user);
+        $participant = $em->getRepository(Participant::class)->find($id);
+        $form = $this->createForm(ParticipantForm::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             //hashage du mdp
             $plainPassword = $form->get('password')->getData();
             if ($plainPassword) {
-                $user->setPassword($hasher->hashPassword($user, $plainPassword));
+                $participant->setPassword($hasher->hashPassword($participant, $plainPassword));
             }
 
             //récupération de l'image
@@ -44,7 +44,7 @@ class ParticipantController extends AbstractController
                     $newFilename
                 );
 
-                $user->setImageURL($newFilename);
+                $participant->setImageURL($newFilename);
 
             }
 
@@ -55,6 +55,7 @@ class ParticipantController extends AbstractController
 
         return $this->render('main/modifierProfil.html.twig', [
             'form' => $form->createView(),
+            'participant' => $participant,
         ]);
     }
 

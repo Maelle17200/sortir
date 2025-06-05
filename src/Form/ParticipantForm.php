@@ -6,23 +6,51 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ParticipantForm extends AbstractType
 {
+    public function __construct(private readonly TokenStorageInterface $tokenStorage)
+    {
+
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isAdmin = ($user->getRoles()[0] == 'ROLE_ADMIN');
+
+        if($isAdmin){
+            $builder->add('actif', CheckboxType::class, [
+                'label' => 'Actif',
+            ]);
+        }
+        if($isAdmin){
+            $builder
+                ->add('campus', EntityType::class, [
+                    'class' => Campus::class,
+                    'choice_label' => 'nom',
+                    'disabled' => false,
+                    'label' => 'Campus',
+                ]);
+        }
+        if(!$isAdmin){
+            $builder
+                ->add('campus', EntityType::class, [
+                    'class' => Campus::class,
+                    'choice_label' => 'nom',
+                    'disabled' => true,
+                    'label' => 'Campus',
+                ]);
+        }
         $builder
-            ->add('campus', EntityType::class, [
-                'class' => Campus::class,
-                'choice_label' => 'nom',
-                'disabled' => true,
-                'label' => 'Campus',
-            ])
             ->add('pseudo')
             ->add('prenom')
             ->add('nom')
