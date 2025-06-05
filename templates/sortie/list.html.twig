@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} | Liste des sorties{% endblock %}
+{% block title %}{{ parent() }} | Accueil{% endblock %}
 
 {% block body %}
     {% for label, messages in app.flashes %}
@@ -15,6 +15,7 @@
     {{ form_start(rechercheSortiesForm) }}
     {{ form_widget(rechercheSortiesForm) }}
     <button class="btn btn-secondary">Rechercher</button>
+    <a class="btn btn-primary" aria-current="page" href="{{ path('sortie_enregistrer') }}">Proposer une sortie</a>
     {{ form_end(rechercheSortiesForm) }}
 
     <table class="table">
