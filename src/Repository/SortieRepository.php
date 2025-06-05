@@ -33,7 +33,10 @@ class SortieRepository extends ServiceEntityRepository
         bool $sortiesTerminees,
     )
     {
-        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder = $this->createQueryBuilder('sortie')
+            ->innerJoin('sortie.etat', 'etat')
+            ->andWhere('etat.libelle != :historise')
+            ->setParameter('historise', 'Historisée');
 
         if($nom){
             $queryBuilder
@@ -75,7 +78,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if($sortiesTerminees){
             $queryBuilder
-                ->innerJoin('sortie.etat', 'etat')  // Jointure entre Sortie et Etat
+                //->innerJoin('sortie.etat', 'etat')  // Jointure entre Sortie et Etat
                 ->andWhere('etat.libelle = :libelle')  // Filtrer par le libelle de l'état
                 ->setParameter('libelle', "Terminée");
         }

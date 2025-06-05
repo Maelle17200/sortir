@@ -91,7 +91,7 @@ class Sortie
         minMessage: "Le texte est trop court. 10 caractères minimum.",
         maxMessage: "Le text est trop long. 500 caractères maximum."
     )]
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?String $motifAnnulation = null;
 
     public function getMotifAnnulation(): ?string
