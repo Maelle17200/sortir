@@ -97,12 +97,23 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
     private Collection $sortiesOrganisees;
 
-
+    #[ORM\Column]
+    private bool $actif = true;
 
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
         $this->sortiesOrganisees = new ArrayCollection();
+    }
+
+    public function isActif(): bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): void
+    {
+        $this->actif = $actif;
     }
 
     public function getImageURL(): ?string
