@@ -13,11 +13,16 @@ class SortieListener
 
     }
 
-    public function cloture(Sortie $sortie) : void {
-        $etat = $this->er->findOneBy(['libelle' => "Clôturée"]);
+    public function postLoad(Sortie $sortie) : void {
+        $etatClo = $this->er->findOneBy(['libelle' => "Clôturée"]);
+        $etatOuv = $this->er->findOneBy(['libelle' => "Ouverte"]);
 
-        if ($sortie->getDateLimiteInscription() >= new \DateTime('now') || $sortie->getParticipants()->count() >= $sortie->getNbInscriptionMax()) {
-            $sortie->setEtat($etat);
+        if ($sortie->getDateLimiteInscription() <= new \DateTime('now') || $sortie->getParticipants()->count() >= $sortie->getNbInscriptionMax()) {
+            $sortie->setEtat($etatClo);
+        }
+
+        if ($sortie->getEtat() == $etatClo && $sortie->getParticipants()->count() < $sortie->getNbInscriptionMax() && $sortie->getDateLimiteInscription() >= new \DateTime('now')) {
+            $sortie->setEtat($etatOuv);
         }
     }
 

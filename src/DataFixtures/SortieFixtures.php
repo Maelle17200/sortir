@@ -17,7 +17,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = \Faker\Factory::create('fr_FR');
 
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 40; $i++) {
             $sortie = new Sortie();
 
             $sortie->setNom($faker->sentence());
@@ -31,21 +31,28 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
             $sortie->setDateLimiteInscription(\DateTimeImmutable::createFromMutable($dateRegister));
             $sortie->setNbInscriptionMax($faker->numberBetween(1,50));
             $sortie->setInfosSortie($faker->paragraph(5));
+            $organisateurId = $faker->numberBetween(1,20);
+            $sortie->setOrganisateur($this->getReference('participant'.$organisateurId, Participant::class));
             //4 campus
-            $sortie->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
+//            $sortie->setCampus($this->getReference('campus'.$faker->numberBetween(1,4), Campus::class));
+            $sortie->setCampus($sortie->getOrganisateur()->getCampus());
             //7 états
             $sortie->setEtat($this->getReference('etat'.$faker->numberBetween(1,7), Etat::class));
             //10 lieux différents (cf LieuFixtures)
             $sortie->setLieu($this->getReference('lieu'.$faker->numberBetween(1,10), Lieu::class));
             //20 participants actifs différents (cf ParticipantFixtures)
 
-            $organisateurId = $faker->numberBetween(1,20);
-            $sortie->setOrganisateur($this->getReference('participant'.$organisateurId, Participant::class));
+
 
             //Tire au sort le nombre de participants à la sortie, puis cré le tableau des participants
             $nbParticipants = $faker->numberBetween(1, $sortie->getNbInscriptionMax());
             for ($j = 0; $j < $nbParticipants; $j++) {
-                $sortie->addParticipant($this->getReference('participant'.$faker->numberBetween(1,20), Participant::class));
+                $participant = $this->getReference('participant'.$faker->numberBetween(1,20), Participant::class);
+
+                if($participant->getCampus() == $sortie->getCampus()){
+                    $sortie->addParticipant($participant);
+                }
+
             }
 
             $manager->persist($sortie);

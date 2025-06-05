@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250528143512 extends AbstractMigration
+final class Version20250605075614 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,10 +21,7 @@ final class Version20250528143512 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE lieu CHANGE latitude latitude DOUBLE PRECISION NOT NULL, CHANGE longitude longitude DOUBLE PRECISION NOT NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE sortie CHANGE nb_inscription_max nb_inscription_max INT NOT NULL
+            ALTER TABLE sortie CHANGE motif_annulation motif_annulation VARCHAR(255) DEFAULT NULL
         SQL);
     }
 
@@ -32,10 +29,7 @@ final class Version20250528143512 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE lieu CHANGE latitude latitude DOUBLE PRECISION DEFAULT NULL, CHANGE longitude longitude DOUBLE PRECISION DEFAULT NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE sortie CHANGE nb_inscription_max nb_inscription_max INT DEFAULT NULL
+            ALTER TABLE sortie CHANGE motif_annulation motif_annulation VARCHAR(255) NOT NULL
         SQL);
     }
 }

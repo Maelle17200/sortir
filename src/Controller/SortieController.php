@@ -148,7 +148,7 @@ final class SortieController extends AbstractController
     {
         $sortie = $sr->find($id);
 
-        if($sortie->getEtat()->getLibelle() == "Ouverte"){
+        if($sortie->getEtat()->getLibelle() == "Ouverte" && $sortie->getNbInscriptionMax() > $sortie->getParticipants()->count()) {
             $newParticipant = $pr->find($this->getUser()->getId());
             $sortie->addParticipant($newParticipant);
             $em->persist($sortie);
@@ -156,7 +156,7 @@ final class SortieController extends AbstractController
             $this->addFlash("success", "Vous avez été inscrit à la sortie" . $sortie->getNom() . ".");
             return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
         } else {
-            $this->addFlash("danger", "Impossible de s'inscrire, la sortie" . $sortie->getNom() . "n'est pas ouverte. Son statut est : " . $sortie->getEtat()->getLibelle());
+            $this->addFlash("danger", "Impossible de s'inscrire à la sortie" . $sortie->getNom() . ", vérifier son état et le nombre de places disponibles.");
             return $this->redirectToRoute('sortie_liste');
         }
 
@@ -167,7 +167,7 @@ final class SortieController extends AbstractController
     {
         $sortie = $sr->find($id);
 
-        if($sortie->getEtat()->getLibelle() == "Ouverte"){
+        if($sortie->getEtat()->getLibelle() == "Ouverte" || $sortie->getEtat()->getLibelle() == "Clôturée" ){
             $oldParticipant = $pr->find($this->getUser()->getId());
             $sortie->removeParticipant($oldParticipant);
             $em->persist($sortie);
@@ -186,6 +186,12 @@ final class SortieController extends AbstractController
         // Sécurité : seul l'organisateur peut modifier la sortie
         if ($sortie->getOrganisateur() !== $this->getUser()) {
             $this->addFlash("danger", "Vous n'avez pas le droit de modifier cette sortie.");
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+        //Sécurité : la sortie ne peut être modifiée que si elle n'a pas été publiée
+        if($sortie->getEtat()->getLibelle() != "En création"){
+            $this->addFlash("danger", "Vous n'avez pas le droit de modifier une sortie qui a déjà été publiée.");
             return $this->redirectToRoute('sortie_liste');
         }
 
@@ -242,7 +248,7 @@ final class SortieController extends AbstractController
     #[Route('/sortie/annuler/{id}', name: 'sortie_annuler', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
     public function annuler(EntityManagerInterface $em, Sortie $sortie, Request $request): Response
     {
-        if ($sortie->getOrganisateur() !== $this->getUser() && $sortie->getEtat()->getLibelle() !== "Ouverte") {
+        if ($sortie->getOrganisateur() !== $this->getUser() && $sortie->getEtat()->getLibelle() !== "Ouverte" || $sortie->getEtat()->getLibelle() !== "Clôturée" ) {
             $this->addFlash("danger", "Vous n'avez pas le droit d'annuler cette sortie.");
             return $this->redirectToRoute('sortie_liste');
         }

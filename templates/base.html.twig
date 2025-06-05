@@ -25,6 +25,7 @@
                     <span class="align-self-end">Rôle : {{ formattedRoleName }}</span>
                     <span class="align-self-end">Campus : {{ app.user.campus.nom }}</span>
                     <span class="align-self-end">Date du jour {{ 'now'|date('d / m / Y') }}</span>
+                    <span class="align-self-end">Heure {{ 'now'|date('H:i') }}</span>
                 {% endfor %}
             </div>
         {% endif %}
