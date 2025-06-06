@@ -4,48 +4,59 @@
 
 {% block body %}
     <h1>Gestion des utilisateurs</h1>
-    <h2>Créer un nouvel utilisateur</h2>
-    {{ form_errors(registrationForm) }}
-    {{ form_start(registrationForm) }}
-    {{ form_row(registrationForm.prenom) }}
-    {{ form_row(registrationForm.nom) }}
-    {{ form_row(registrationForm.email) }}
-    {{ form_row(registrationForm.plainPassword) }}
-    {{ form_row(registrationForm.telephone) }}
-    {{ form_row(registrationForm.pseudo) }}
-    {{ form_row(registrationForm.campus) }}
-    <button type="submit" class="btn btn-primary">S'inscrire</button>
-    {{ form_end(registrationForm) }}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
 
-    <h2>Liste de tous les utilisateurs</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Actif</th>
-                <th>Pseudo</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Téléphone</th>
-                <th>Campus</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for participant in listeParticipants %}
-                <tr>
-                    <td>
-                        {% if participant.actif %}
-                            X
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ path('app_participant_profil', {id: participant.id}) }}">{{ participant.pseudo }}</a></td>
-                    <td>{{ participant.nom }}</td>
-                    <td>{{ participant.prenom }}</td>
-                    <td>{{ participant.telephone }}</td>
-                    <td>{{ participant.campus.nom }}</td>
-                    <td><a class="btn btn-primary" href="{{ path('app_modifier_participant', {id: participant.id}) }}">Modifier</a></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                <h2 class="text-center mb-4">Créer un nouvel utilisateur</h2>
+                {{ form_errors(registrationForm) }}
+                {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.prenom) }}
+                {{ form_row(registrationForm.nom) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.plainPassword) }}
+                {{ form_row(registrationForm.telephone) }}
+                {{ form_row(registrationForm.pseudo) }}
+                {{ form_row(registrationForm.campus) }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">S'inscrire</button>
+                </div>
+                {{ form_end(registrationForm) }}
+
+                <h2 class="text-center mt-5">Liste de tous les utilisateurs</h2>
+                <table class="table table-striped mt-3">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Actif</th>
+                        <th>Pseudo</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Téléphone</th>
+                        <th>Campus</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for participant in listeParticipants %}
+                        <tr>
+                            <td>
+                                {% if participant.actif %}
+                                    X
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ path('app_participant_profil', {id: participant.id}) }}">{{ participant.pseudo }}</a></td>
+                            <td>{{ participant.nom }}</td>
+                            <td>{{ participant.prenom }}</td>
+                            <td>{{ participant.telephone }}</td>
+                            <td>{{ participant.campus.nom }}</td>
+                            <td><a class="btn btn-primary btn-sm" href="{{ path('app_modifier_participant', {id: participant.id}) }}">Modifier</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
