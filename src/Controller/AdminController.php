@@ -8,6 +8,8 @@ use App\Entity\Ville;
 use App\Form\CampusForm;
 use App\Form\RegistrationForm;
 use App\Form\VilleForm;
+use App\Repository\CampusRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -56,7 +58,7 @@ class AdminController extends AbstractController
 
         $listeParticipants = $entityManager->getRepository(Participant::class)->findAll();
 
-        return $this->render('creer.html.twig', [
+        return $this->render('participant/creer.html.twig', [
             'registrationForm' => $form,
             'listeParticipants' => $listeParticipants,
 
@@ -64,7 +66,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/ville', name: 'admin_ville', methods: ['GET','POST'])]
-    public function ville(Request $request, EntityManagerInterface $em): Response
+    public function ville(VilleRepository $vr, Request $request, EntityManagerInterface $em): Response
     {
         $ville = new Ville();
         $form = $this->createForm(VilleForm::class, $ville);
@@ -79,14 +81,16 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_ville');
         }
 
+        $listeVilles = $vr->findAll();
         return $this->render('ville/creer.html.twig', [
             'form' => $form,
+            'listeVilles' => $listeVilles,
 
         ]);
     }
 
     #[Route('/campus', name: 'admin_campus', methods: ['GET','POST'])]
-    public function campus(Request $request, EntityManagerInterface $em): Response
+    public function campus(CampusRepository $cr, Request $request, EntityManagerInterface $em): Response
     {
         $campus = new Campus();
         $form = $this->createForm(CampusForm::class, $campus);
@@ -101,8 +105,11 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_campus');
         }
 
+        $listeCampus = $cr->findAll();
+
         return $this->render('campus/creer.html.twig', [
             'form' => $form,
+            'listeCampus' => $listeCampus,
 
         ]);
     }

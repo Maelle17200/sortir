@@ -1,12 +1,33 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Ajouter un campus</h1>
+    <h1>Gestion des campus</h1>
+    <h2>Ajouter un campus</h2>
     {{ form_start(form) }}
     {{ form_errors(form) }}
     {{ form_widget(form) }}
     <button class="btn btn-primary">Enregistrer</button>
     {{ form_end(form) }}
+
+    <h2>Liste de tous les campus</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for campus in listeCampus %}
+            <tr>
+                <td>{{ campus.nom }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('admin_campus', {id: campus.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block title %}

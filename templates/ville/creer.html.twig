@@ -1,12 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Ajouter une ville</h1>
+    <h1>Gestion des villes</h1>
+    <h2>Ajouter une ville</h2>
     {{ form_start(form) }}
     {{ form_errors(form) }}
     {{ form_widget(form) }}
     <button class="btn btn-primary">Enregistrer</button>
     {{ form_end(form) }}
+
+    <h2>Liste de toutes les villes</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Code Postal</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ville in listeVilles %}
+            <tr>
+                <td>{{ ville.nom }}</td>
+                <td>{{ ville.codePostal }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('admin_ville', {id: ville.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block title %}
