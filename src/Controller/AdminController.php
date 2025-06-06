@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Ville;
 use App\Form\RegistrationForm;
+use App\Form\VilleForm;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,7 +26,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/register', name: 'admin_register', methods: ['GET','POST'])]
-    public function utilisateurs(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
         $user = new Participant();
         $form = $this->createForm(RegistrationForm::class, $user);
@@ -55,6 +57,28 @@ class AdminController extends AbstractController
         return $this->render('admin/register.html.twig', [
             'registrationForm' => $form,
             'listeParticipants' => $listeParticipants,
+
+        ]);
+    }
+
+    #[Route('/ville', name: 'admin_ville', methods: ['GET','POST'])]
+    public function ville(Request $request, EntityManagerInterface $em): Response
+    {
+        $ville = new Ville();
+        $form = $this->createForm(VilleForm::class, $ville);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->persist($ville);
+            $em->flush();
+
+            $this->addFlash("success", "La ville " . $ville->getNom() . " a bien été crée.");
+            return $this->redirectToRoute('admin_ville');
+        }
+
+        return $this->render('ville/creer.html.twig', [
+            'form' => $form,
 
         ]);
     }
