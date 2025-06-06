@@ -46,7 +46,7 @@ class ParticipantController extends AbstractController
             return $this->redirectToRoute('app_modifier_participant', ['id' => $id]);
         }
 
-        return $this->render('main/modifierProfil.html.twig', [
+        return $this->render('participant/modifierProfil.html.twig', [
             'form' => $form->createView(),
             'participant' => $participant,
         ]);

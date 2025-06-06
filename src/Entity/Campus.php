@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[UniqueEntity('nom')]
+#[UniqueEntity(fields: 'nom', message: 'Ce campus existe déjà')]
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
 class Campus
 {
