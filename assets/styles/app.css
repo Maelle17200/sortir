@@ -11,7 +11,7 @@ h1{
     text-align: center;
 }
 
-form {
+/*form {
     max-width: 400px;
     margin: 60px auto;
     padding: 30px;
@@ -64,3 +64,4 @@ form button[type="submit"] {
 .form-check-label{
     margin-left: 15px;
 }
+

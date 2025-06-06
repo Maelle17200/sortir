@@ -3,27 +3,50 @@
 {% block title %}Profil de {{ participant.pseudo }}{% endblock %}
 
 {% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm form-background">
+                <div class="card-header text-center">
 
-    {% for label, messages in app.flashes %}
-        <div class="alert alert-{{ label }}">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
+                        {% for label, messages in app.flashes %}
+                            <div class="alert alert-{{ label }}">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <h1>Profil de {{ participant.pseudo }}</h1>
+
+                        {% if participant.imageURL %}
+                            <img src="{{ asset('upload/img/' ~ participant.imageURL) }}" alt="Image de profil de {{ participant.pseudo }}" width="200px">
+                        {% endif %}
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                Nom : {{ participant.nom }}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                Prénom : {{ participant.prenom }}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                Email : {{ participant.email }}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                Campus : {{ participant.campus.nom }}
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        <a href="{{ path('sortie_liste') }}">Retour à la liste des sorties</a>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    {% endfor %}
-
-    <h1>Profil de {{ participant.pseudo }}</h1>
-
-    {% if participant.imageURL %}
-        <img src="{{ asset('upload/img/' ~ participant.imageURL) }}" alt="Image de profil de {{ participant.pseudo }}" width="200px">
-    {% endif %}
-
-    <ul>
-        <li>Nom : {{ participant.nom }}</li>
-        <li>Prénom : {{ participant.prenom }}</li>
-        <li>Email : {{ participant.email }}</li>
-        <li>Campus : {{ participant.campus.nom }}</li>
-    </ul>
-
-    <a href="{{ path('sortie_liste') }}">← Retour à la liste des sorties</a>
+    </div>
+</div>
 {% endblock %}
