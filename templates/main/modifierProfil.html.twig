@@ -3,6 +3,15 @@
 {% block title %}Modifier mon profil{% endblock %}
 
 {% block body %}
+
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     <h1>Modifier le profil de {{ participant.pseudo }}</h1>
 
     {% if app.user.imageURL %}

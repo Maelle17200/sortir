@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ParticipantForm;
+use App\Service\SupprFileService;
 use App\Service\UploadImageService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Participant;
@@ -31,27 +32,14 @@ class ParticipantController extends AbstractController
                 $participant->setPassword($hasher->hashPassword($participant, $plainPassword));
             }
 
-            //TODO creer service
             //récupération de l'image
             $imageFile = $form->get('image')->getData();
 
-            //Enregistrement de l'image via service
+            //Enregistrement de l'image via service, récupération de l'URL de l'image
             $newFilename = $uploadImageService->upload($imageFile);
 
-            //Inscription de l'URL de l'image chez le participant
+            //Hydration de $participant avec l'URL de l'image uploadée
             $participant->setImageURL($newFilename);
-
-
-//            if ($imageFile) {
-//                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-//                $safeFilename = $slugger->slug($originalFilename);
-//                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-//
-//                $imageFile->move(
-//                    $this->getParameter('images_directory'),
-//                    $newFilename
-//                );
-//            }
 
             $em->flush();
             $this->addFlash('success', 'Participant mis à jour !');
@@ -65,16 +53,12 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/participant/{id}/suppr_img', name: 'participant_suppr_img', methods: ['GET', 'POST'])]
-    public function supprImg(Participant $participant, EntityManagerInterface $em): Response
+    public function supprImg(SupprFileService $supprFile, Participant $participant, EntityManagerInterface $em): Response
     {
         $imageURL = $this->getParameter('images_directory').'/'.$participant->getImageURL();
 
-        $filesystem = new Filesystem();
-        //vérifie que l'image existe
-        if ($filesystem->exists($imageURL)) {
-            //supprime l'image du dossier upload/img
-            $filesystem->remove($imageURL);
-        }
+        //Supprime l'image, si elle existe
+        $supprFile->supprFile($imageURL);
 
         //vérifie la présence d'une URL en base et la supprime
         if($imageURL){
