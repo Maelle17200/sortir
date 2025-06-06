@@ -6,13 +6,11 @@ use App\Form\ParticipantForm;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Participant;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ParticipantController extends AbstractController
@@ -32,6 +30,7 @@ class ParticipantController extends AbstractController
                 $participant->setPassword($hasher->hashPassword($participant, $plainPassword));
             }
 
+            //TODO creer service
             //récupération de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
@@ -50,7 +49,7 @@ class ParticipantController extends AbstractController
 
             $em->flush();
             $this->addFlash('success', 'Participant mis à jour !');
-            return $this->redirectToRoute('app_modifier_participant');
+            return $this->redirectToRoute('app_modifier_participant', ['id' => $id]);
         }
 
         return $this->render('main/modifierProfil.html.twig', [
@@ -81,7 +80,7 @@ class ParticipantController extends AbstractController
 
         $this->addFlash('warning', 'L\'image a été supprimée.');
 
-        return $this->redirectToRoute('app_modifier_participant');
+        return $this->redirectToRoute('app_modifier_participant', ['id' => $participant->getId()]);
     }
 
     #[Route('/participant/profil/{id}', name: 'app_participant_profil')]
