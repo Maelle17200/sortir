@@ -36,10 +36,11 @@ class ParticipantController extends AbstractController
             $imageFile = $form->get('image')->getData();
 
             //Enregistrement de l'image via service, récupération de l'URL de l'image
-            $newFilename = $uploadImageService->upload($imageFile);
-
-            //Hydration de $participant avec l'URL de l'image uploadée
-            $participant->setImageURL($newFilename);
+            if($imageFile){
+                $newFilename = $uploadImageService->upload($imageFile);
+                //Hydration de $participant avec l'URL de l'image uploadée
+                $participant->setImageURL($newFilename);
+            }
 
             $em->flush();
             $this->addFlash('success', 'Participant mis à jour !');

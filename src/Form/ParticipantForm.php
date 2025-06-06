@@ -30,6 +30,7 @@ class ParticipantForm extends AbstractType
         if($isAdmin){
             $builder->add('actif', CheckboxType::class, [
                 'label' => 'Actif',
+                'required' => false,
             ]);
         }
         if($isAdmin){
