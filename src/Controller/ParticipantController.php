@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ParticipantForm;
+use App\Service\UploadImageService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Participant;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,7 +18,7 @@ class ParticipantController extends AbstractController
 {
     #[Route('/participant/{id}/modifier', name: 'app_modifier_participant')]
 //    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function edit(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher, SluggerInterface $slugger): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function edit(UploadImageService $uploadImageService ,int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher, SluggerInterface $slugger): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $participant = $em->getRepository(Participant::class)->find($id);
         $form = $this->createForm(ParticipantForm::class, $participant);
@@ -33,19 +34,24 @@ class ParticipantController extends AbstractController
             //TODO creer service
             //récupération de l'image
             $imageFile = $form->get('image')->getData();
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
-                $imageFile->move(
-                    $this->getParameter('images_directory'),
-                    $newFilename
-                );
+            //Enregistrement de l'image via service
+            $newFilename = $uploadImageService->upload($imageFile);
 
-                $participant->setImageURL($newFilename);
+            //Inscription de l'URL de l'image chez le participant
+            $participant->setImageURL($newFilename);
 
-            }
+
+//            if ($imageFile) {
+//                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+//                $safeFilename = $slugger->slug($originalFilename);
+//                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+//
+//                $imageFile->move(
+//                    $this->getParameter('images_directory'),
+//                    $newFilename
+//                );
+//            }
 
             $em->flush();
             $this->addFlash('success', 'Participant mis à jour !');
