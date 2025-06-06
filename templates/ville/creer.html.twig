@@ -1,9 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier mon profil{% endblock %}
-
 {% block body %}
-
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}
@@ -11,17 +8,15 @@
             {% endfor %}
         </div>
     {% endfor %}
-
-    <h1>Modifier le profil de {{ participant.pseudo }}</h1>
-
-    {% if app.user.imageURL %}
-        <img src="{{ asset('upload/img/' ~ app.user.imageURL) }}" alt="Image de profil de {{ app.user.pseudo }}" width="200px">
-        <a class="btn btn-primary" href="{{ path('participant_suppr_img', {id: app.user.id}) }}">Supprimer L'image</a>
-    {% endif %}
-
-
+    <h1>Ajouter une ville</h1>
     {{ form_start(form) }}
+    {{ form_errors(form) }}
     {{ form_widget(form) }}
     <button class="btn btn-primary">Enregistrer</button>
     {{ form_end(form) }}
 {% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

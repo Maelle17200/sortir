@@ -28,7 +28,7 @@ class Ville
 
     #[Assert\NotBlank(message: "Veuillez renseigner un code postal.")]
     #[Assert\Regex(
-        pattern: "^\d{5}$",
+        pattern: "/^\d{5}$/",
         message: "Le code postal doit contenir 5 chiffres, sans tiret ni caractère spécial.",
     )]
     #[ORM\Column(length: 5)]
