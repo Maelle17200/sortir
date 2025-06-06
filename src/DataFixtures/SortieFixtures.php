@@ -20,7 +20,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 1; $i <= 40; $i++) {
             $sortie = new Sortie();
 
-            $sortie->setNom($faker->sentence());
+            $sortie->setNom($faker->words(4, true));
             
             $dateDebut = $faker->dateTimeBetween('now', '+1 month');
             $sortie->setDateHeureDebut(\DateTimeImmutable::createFromMutable($dateDebut));
