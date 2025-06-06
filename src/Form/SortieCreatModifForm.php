@@ -68,7 +68,7 @@ class SortieCreatModifForm extends AbstractType
                 'label' => "Campus",
                 'class' => Campus::class,
                 'choice_label' => 'nom',
-                'disabled' => true,
+                'disabled' => false,
                 'data' => $campus,
             ])
             ->add('enregistrer', SubmitType::class, [
